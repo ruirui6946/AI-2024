@@ -1,0 +1,7 @@
+>> clear
+>> t=0.2;
+>> sym(t)
+>> sym(t,'r')
+>> sym(t,'f')
+>> sym(t,'d')
+>> sym(t,'e')
