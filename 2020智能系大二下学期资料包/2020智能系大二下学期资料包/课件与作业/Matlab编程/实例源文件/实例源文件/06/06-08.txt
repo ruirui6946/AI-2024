@@ -1,0 +1,14 @@
+% Set the values for initial speed, gravity, and angle.(设置初始速率、重力加速度和角度的值。)
+v0 = 20; g = 9.81; A = 40*pi/180;
+% Compute the time to hit.(计算碰撞时间。)
+t_hit = 2*v0*sin(A)/g;
+% Compute the arrays containing time, height, and speed.(计算包含时间、高度和速率的数组。)
+t = [0:t_hit/100:t_hit];
+h = v0*t*sin(A) - 0.5*g*t.^2;
+v = sqrt(v0^2 - 2*v0*g*sin(A)*t + g^2*t.^2);
+% Determine when the height is no less than 6,(确定当高度低于6米)
+% and the speed is no greater than 16.(并且速度不大于16。)
+u = find(h>=6&v<=16);
+% Compute the corresponding times.(计算对应的时间。)
+t_1 = (u(1)-1)*(t_hit/100)
+t_2 = u(length(u)-1)*(t_hit/100)
