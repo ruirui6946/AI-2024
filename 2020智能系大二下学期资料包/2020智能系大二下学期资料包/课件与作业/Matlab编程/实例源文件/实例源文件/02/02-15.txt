@@ -1,0 +1,4 @@
+>> x=4;y=0;
+>> z1=x+i*y;
+>> z2=complex(x,y);
+>> isreal(z1),isreal(z2)
