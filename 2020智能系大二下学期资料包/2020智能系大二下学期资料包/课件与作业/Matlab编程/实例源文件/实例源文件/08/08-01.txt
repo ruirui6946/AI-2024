@@ -1,0 +1,5 @@
+>> get(0,'DefaultLineLineWidth')
+>> patch;surface;text;line
+>> props = {'HandleVisibility', 'Interruptible';'SelectionHighlight', 'Type'};
+>> output = get(get(gca,'Children'),props)
+>> get(gca)
