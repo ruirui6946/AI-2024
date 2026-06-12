@@ -1,0 +1,2 @@
+>> f=sym('x+sin(x)')
+>> subs(f,pi/4),subs(f,pi/2)
