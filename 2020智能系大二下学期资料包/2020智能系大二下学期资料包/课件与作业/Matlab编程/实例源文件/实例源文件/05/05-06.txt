@@ -1,0 +1,5 @@
+>> str1=['MATLAB']
+>> str2=['MATlab']
+>> strcmp(str1,str2)
+>> strncmp(str1,str2,3)
+>> strncmp(str1,str2,4)
