@@ -1,0 +1,9 @@
+>> syms s t a x u
+>> f = 1/s^2;
+>> ilaplace(f)
+>> g = 1/(t-a)^2
+>> ilaplace(g)
+>> syms x u
+>> syms a real
+>> f = 1/(u^2-a^2)
+>> simplify(ilaplace(f,x))
