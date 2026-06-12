@@ -1,0 +1,6 @@
+>> A = 28;               % binary 11100
+>> B = 21;               % binary 10101
+>> bitand(A,B)
+>> bitor(A,B)
+>> bitcmp(A,5)
+>> bitxor(A,B)
