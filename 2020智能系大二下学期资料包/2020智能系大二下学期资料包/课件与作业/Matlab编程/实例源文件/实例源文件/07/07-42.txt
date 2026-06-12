@@ -1,0 +1,13 @@
+>> F =pi^(1/2)*exp(-1/4*w^2);
+>> ifourier(F)
+>> G =2/(1+t^2);
+>> ifourier(G)
+>> simplify(G)
+>> clear
+>> syms x real
+>> g = exp(-abs(x));
+>> ifourier(g)
+>> clear
+>> syms w v t real
+>> f = exp(-w^2*abs(v))*sin(v)/v;
+>> ifourier(f,v,t)
