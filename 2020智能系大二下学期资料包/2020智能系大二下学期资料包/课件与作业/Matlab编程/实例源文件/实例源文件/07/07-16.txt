@@ -1,0 +1,4 @@
+>> f = (x^2+x+1)*(x^3+1)
+>> horner(f)
+>> horner(expand(f))
+>> horner(f+1)
