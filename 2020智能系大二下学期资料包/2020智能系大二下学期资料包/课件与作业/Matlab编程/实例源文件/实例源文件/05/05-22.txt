@@ -1,0 +1,12 @@
+>> person.name='liuhuiying';
+>> person.height=162;
+>> person.weight=51;
+>> person.hobby='swimming';
+>> person
+>> person(2).name='zhangqiang';
+>> person(2).height=175;
+>> person(2).weight=65;
+>> person(2).hobby='Game';
+>> person
+>> person(1)
+>> person(2)
