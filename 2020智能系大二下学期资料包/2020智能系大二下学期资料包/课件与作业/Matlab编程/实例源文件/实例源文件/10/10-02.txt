@@ -1,0 +1,9 @@
+function togglebutton1_Callback(hObject, eventdata, handles)
+button_state = get(hObject,'Value');
+if button_state == get(hObject,'Max')
+    % 当按下按钮时执行的操作
+   ...
+elseif button_state == get(hObject,'Min')
+    % 当松开按钮时执行的操作
+    ...
+end
