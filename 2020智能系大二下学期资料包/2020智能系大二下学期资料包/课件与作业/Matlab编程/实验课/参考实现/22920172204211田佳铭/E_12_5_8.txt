@@ -1,0 +1,84 @@
+>> G=sym('[cos(t),sin(t);-sin(t),cos(t)]');
+>> G+sym('t')
+ans =
+[ t + cos(t), t + sin(t)]
+[ t - sin(t), t + cos(t)]
+>> G1=G*G
+G1 =
+[ cos(t)^2 - sin(t)^2,     2*cos(t)*sin(t)]
+[    -2*cos(t)*sin(t), cos(t)^2 - sin(t)^2]
+>> simple(G1)
+Warning: simple will be removed in a future release. Use simplify instead. 
+> In sym.simple at 41 
+simplify:
+[  cos(2*t), sin(2*t)]
+[ -sin(2*t), cos(2*t)]
+radsimp:
+[ cos(t)^2 - sin(t)^2,     2*cos(t)*sin(t)]
+[    -2*cos(t)*sin(t), cos(t)^2 - sin(t)^2]
+simplify(Steps = 100):
+[  cos(2*t), sin(2*t)]
+[ -sin(2*t), cos(2*t)]
+combine(sincos):
+[  cos(2*t), sin(2*t)]
+[ -sin(2*t), cos(2*t)]
+combine(sinhcosh):
+[ cos(t)^2 - sin(t)^2,     2*cos(t)*sin(t)]
+[    -2*cos(t)*sin(t), cos(t)^2 - sin(t)^2]
+combine(ln):
+[ cos(t)^2 - sin(t)^2,     2*cos(t)*sin(t)]
+[    -2*cos(t)*sin(t), cos(t)^2 - sin(t)^2]
+factor:
+[ (cos(t) - sin(t))*(cos(t) + sin(t)),                     2*cos(t)*sin(t)]
+[                    -2*cos(t)*sin(t), (cos(t) - sin(t))*(cos(t) + sin(t))]
+expand:
+[ cos(t)^2 - sin(t)^2,     2*cos(t)*sin(t)]
+[    -2*cos(t)*sin(t), cos(t)^2 - sin(t)^2]
+combine:
+[ cos(t)^2 - sin(t)^2,     2*cos(t)*sin(t)]
+[    -2*cos(t)*sin(t), cos(t)^2 - sin(t)^2]
+rewrite(exp):
+[ (exp(-t*i)/2 + exp(t*i)/2)^2 - ((exp(-t*i)*i)/2 - (exp(t*i)*i)/2)^2,     2*(exp(-t*i)/2 + exp(t*i)/2)*((exp(-t*i)*i)/2 - (exp(t*i)*i)/2)]
+[    -2*(exp(-t*i)/2 + exp(t*i)/2)*((exp(-t*i)*i)/2 - (exp(t*i)*i)/2), (exp(-t*i)/2 + exp(t*i)/2)^2 - ((exp(-t*i)*i)/2 - (exp(t*i)*i)/2)^2]
+rewrite(sincos):
+[ cos(t)^2 - sin(t)^2,     2*cos(t)*sin(t)]
+[    -2*cos(t)*sin(t), cos(t)^2 - sin(t)^2]
+rewrite(sinhcosh):
+[ cosh(t*i)^2 + sinh(t*i)^2,  -cosh(t*i)*sinh(t*i)*2*i]
+[   cosh(t*i)*sinh(t*i)*2*i, cosh(t*i)^2 + sinh(t*i)^2]
+rewrite(tan):
+[ (tan(t/2)^2 - 1)^2/(tan(t/2)^2 + 1)^2 - (4*tan(t/2)^2)/(tan(t/2)^2 + 1)^2,                         -(4*tan(t/2)*(tan(t/2)^2 - 1))/(tan(t/2)^2 + 1)^2]
+[                          (4*tan(t/2)*(tan(t/2)^2 - 1))/(tan(t/2)^2 + 1)^2, (tan(t/2)^2 - 1)^2/(tan(t/2)^2 + 1)^2 - (4*tan(t/2)^2)/(tan(t/2)^2 + 1)^2]
+mwcos2sin:
+[              1 - 2*sin(t)^2, -2*sin(t)*(2*sin(t/2)^2 - 1)]
+[ 2*sin(t)*(2*sin(t/2)^2 - 1),               1 - 2*sin(t)^2]
+collect(t):
+[ cos(t)^2 - sin(t)^2,     2*cos(t)*sin(t)]
+[    -2*cos(t)*sin(t), cos(t)^2 - sin(t)^2]
+ans =
+[  cos(2*t), sin(2*t)]
+[ -sin(2*t), cos(2*t)]
+>> H=sym(hilb(3));
+>> det(H)
+ans =
+1/2160
+>> J=inv(H)
+J =
+[   9,  -36,   30]
+[ -36,  192, -180]
+[  30, -180,  180]
+>> det(J)
+ans =
+2160
+>> F=sym('[1/2,1/4;1/4,1/2]');
+>> eig(F)
+ans =
+ 1/4
+ 3/4
+>> [V,E]=eig(F)
+V =
+[ -1, 1]
+[  1, 1]
+E =
+[ 1/4,   0]
+[   0, 3/4]
