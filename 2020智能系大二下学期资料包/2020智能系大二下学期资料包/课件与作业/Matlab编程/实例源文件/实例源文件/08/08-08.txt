@@ -1,0 +1,4 @@
+>> x=[-3:0.2:3];
+>> y=1/sqrt(2*pi)*exp(-1/2*x.^2);
+>> subplot(1,2,1),plot(x,y,'r--*')
+>> subplot(1,2,2),plot(x,y,'r*')
