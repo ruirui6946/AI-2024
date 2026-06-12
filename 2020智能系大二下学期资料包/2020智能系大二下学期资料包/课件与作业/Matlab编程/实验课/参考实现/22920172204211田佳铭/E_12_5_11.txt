@@ -1,0 +1,16 @@
+>> f=sym('sin(s+2*x)');
+>> int(f)
+ans =
+-cos(s + 2*x)/2
+>> int(f,'s')
+ans =
+-cos(s + 2*x)
+>> int(f,pi/2,pi)
+ans =
+-cos(s)
+>> int(f,'s',pi/2,pi)
+ans =
+cos(2*x) - sin(2*x)
+>> int(f,'m','n')
+ans =
+cos(2*m + s)/2 - cos(2*n + s)/2
