@@ -1,0 +1,6 @@
+>> A = [true true false false];
+>> B = [true false true false];
+>> A & B
+>> A | B
+>> C = [1 0 0]
+>> A & C
