@@ -1,0 +1,1 @@
+>> str1=char(abs_of_str)
