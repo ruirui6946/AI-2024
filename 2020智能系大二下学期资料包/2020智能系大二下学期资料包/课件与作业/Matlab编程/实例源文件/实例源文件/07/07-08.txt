@@ -1,0 +1,5 @@
+>> f=sym('x^2+y^2')
+>> g=subs(f,x,3)
+>> subs(g,4)
+>> h=subs(f,3)
+>> subs(h,4)
