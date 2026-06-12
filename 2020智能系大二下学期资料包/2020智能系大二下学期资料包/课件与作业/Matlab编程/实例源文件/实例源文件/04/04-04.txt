@@ -1,0 +1,5 @@
+>> a=[1 2 1];
+>> b=[1 -1];
+>> p1=polyder(a)
+>> p2=polyder(a,b)
+>> [p3,p4]=polyder(a,b)
