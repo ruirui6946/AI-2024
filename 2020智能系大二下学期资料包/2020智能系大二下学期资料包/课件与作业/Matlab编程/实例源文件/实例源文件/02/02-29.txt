@@ -1,0 +1,4 @@
+>> d1 = datenum('02-Oct-2012')
+>> d2 = datestr(d1 + 10)
+>> dv1 = datevec(d1)
+>> dv2 = datevec(d2)
