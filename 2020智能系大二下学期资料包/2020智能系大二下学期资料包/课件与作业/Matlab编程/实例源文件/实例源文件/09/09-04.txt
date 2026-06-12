@@ -1,0 +1,6 @@
+>> t=0:pi/20:2*pi;
+>> z=sin(t);
+>> plot(t,z)
+>> set(gca,'YAxisLocation','right')
+>> xlabel('t')
+>> ylabel('z')
