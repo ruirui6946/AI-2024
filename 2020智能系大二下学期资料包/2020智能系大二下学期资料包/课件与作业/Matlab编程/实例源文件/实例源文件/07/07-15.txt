@@ -1,0 +1,6 @@
+>> syms x y;
+>> f=expand((x-2)^3)
+>> horner(f)
+>> g=x^3+3*x+1;
+>> h=3*y^2+4*y+7;
+>> horner([g,h])
