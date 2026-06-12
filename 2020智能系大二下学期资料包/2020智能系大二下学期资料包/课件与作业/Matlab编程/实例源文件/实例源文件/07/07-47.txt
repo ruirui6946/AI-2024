@@ -1,0 +1,2 @@
+>> mfun('FresnelC',0:5)
+>> mfun('Chi',[3*i 0])
