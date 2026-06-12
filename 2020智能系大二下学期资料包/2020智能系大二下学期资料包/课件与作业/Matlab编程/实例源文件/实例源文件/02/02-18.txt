@@ -1,0 +1,4 @@
+>>str = 'Hello';
+>>if ~isempty(str) && ischar(str)
+   sprintf('Input string is ''%s''', str)
+   end
