@@ -1,0 +1,3 @@
+>> person=rmfield(person,'hobby')
+>> person(1)
+>> person(2)
