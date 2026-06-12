@@ -1,0 +1,1 @@
+>> person=struct('name','liuhuiying','height',162,'weight',51,'hobby','swimming')
