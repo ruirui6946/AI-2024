@@ -1,0 +1,9 @@
+x = [10,1000,-10,100];
+y = NaN*x;
+for k = 1:length(x)
+if x(k) < 0
+continue
+end
+y(k) = log10(x(k));
+end
+y
