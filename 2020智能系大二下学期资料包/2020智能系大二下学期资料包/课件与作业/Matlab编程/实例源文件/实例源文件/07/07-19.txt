@@ -1,0 +1,5 @@
+>> syms x;f = cos(x) + i*sin(x);simple(f)
+>> f = (x + 1)*x*(x - 1);[f, how] = simple(f)
+>>f = cos(x)^2 + sin(x)^2;f = simple(f)
+>>[r,how] = simple(2*cos(x)^2-sin(x)^2)
+
