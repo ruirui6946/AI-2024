@@ -1,0 +1,25 @@
+% polynomial operation
+p1=[1 2 1];                         		%定义多项式
+p2=[1 1];
+length_of_p1=length(p1);
+length_of_p2=length(p2);
+if length_of_p1 == length_of_p2     		%判断两个多项式长度是否相等
+    p1_plus_p2 =p1+p2;              		%多项式相加
+    p1_minus_p2=p1-p2;              	%多项式相减
+elseif length_of_p1 < length_of_p2
+        temp_p1=[zeros(length_of_p2-length_of_p1) p1];
+        p1_plus_p2 =temp_p1+p2;
+        p1_minus_p2=temp_p1-p2;
+else
+    temp_p2=[zeros(length_of_p1-length_of_p2) p2];
+    p1_plus_p2 =p1+temp_p2;
+    p1_minus_p2=p1-temp_p2;
+end
+p1_multiply_p2=conv(p1,p2);         		%多项式相乘
+p1_divide_p2  =deconv(p1,p2);       		%多项式除法
+p1=poly2sym(p1)                    		%显示多项式 p1
+p2=poly2sym(p2)                    		%显示多项式 p2
+p1_plus_p2 =poly2sym(p1_plus_p2)
+p1_minus_p2=poly2sym(p1_minus_p2)
+p1_multiply_p2=poly2sym(p1_multiply_p2)
+p1_divide_p2  =poly2sym(p1_divide_p2)
