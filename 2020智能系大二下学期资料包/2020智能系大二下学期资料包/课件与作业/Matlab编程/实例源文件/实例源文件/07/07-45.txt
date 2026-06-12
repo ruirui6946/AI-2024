@@ -1,0 +1,7 @@
+>> syms n z a w
+>> f = n^4;
+>> ztrans(f)
+>> g = a^z
+>> simplify(ztrans(g))
+>> f = sin(a*n);
+>> ztrans(f,w)
