@@ -1,0 +1,1 @@
+>> [names, types, x, y, answer] = textread('D:\mat.txt','%s %s %f %d %s', 1)
