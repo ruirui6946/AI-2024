@@ -1,0 +1,36 @@
+DATAS SEGMENT
+    ;STR EQU 5  
+DATAS ENDS
+
+STACKS SEGMENT
+    ;此处输入堆栈段代码
+STACKS ENDS
+
+CODES SEGMENT
+    ASSUME CS:CODES,DS:DATAS,SS:STACKS
+START:
+    MOV AX,DATAS
+    MOV DS,AX
+    
+    JMP FAR PTR LL1
+    LL0:
+    
+    MOV DL,'0'
+    MOV AH,2
+    INT 21H
+    
+    ;MOV AH,4CH
+    ;INT 21H
+CODES ENDS
+
+CODE2 SEGMENT
+    LL1:
+    ADD AX,1
+    MOV DL,'0'
+    MOV AH,2
+    INT 21H
+    
+    MOV AH,4CH
+    INT 21H
+CODE2 ENDS
+    END START
