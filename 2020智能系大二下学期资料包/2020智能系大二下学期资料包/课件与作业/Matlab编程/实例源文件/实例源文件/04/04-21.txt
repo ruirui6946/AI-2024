@@ -1,0 +1,13 @@
+% the file to creat a function with parameters
+function y = poly3_fun(x,a,b,c)
+y = x^3+a*x^2+b*x+c;
+
+
+% find the minimum of the function f(x)=x^3+a*x^2+b*x+c
+function [x0,y] = funmin_para(a,b,c,x1,x2)
+options = optimset('Display','off');
+[x0,y] = fminbnd(@(x)poly3_fun(x,a,b,c),x1,x2,options);
+end
+
+
+>> [x,y]=funmin_para(-1000,10,0,600,800)
