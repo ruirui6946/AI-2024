@@ -1,0 +1,5 @@
+>> x=single(6.9)
+>> x1=int8(x)
+>> class(x1)
+>> x2=double(x)
+>> class(x2)
