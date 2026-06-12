@@ -1,0 +1,2 @@
+>> F = @(x,y)y*sin(x)+x*cos(y);
+>> Q = dblquad(F,pi,2*pi,0,pi)
