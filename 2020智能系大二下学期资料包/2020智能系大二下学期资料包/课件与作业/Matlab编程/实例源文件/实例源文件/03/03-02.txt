@@ -1,0 +1,9 @@
+>> A = [2 5 7
+1 3 2]
+>> A + 5
+>>B = ones(2, 3)
+>> B = B * 2
+>> A.*B % scalar multiplication
+>> A*B % matrix multiplication does not work here
+
+
