@@ -1,0 +1,5 @@
+>> x=sym('x');
+>> f=x^2+1;
+>> subs(f,3)
+>> A=magic(3)
+>> subs(f,magic(3))
