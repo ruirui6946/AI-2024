@@ -1,0 +1,13 @@
+>> f=sym('a*x^3+x^2-b*x-c');
+>> diff(f)
+ans =
+3*a*x^2 + 2*x - b
+>> diff(f,'a')
+ans =
+x^3
+>> diff(f,2)
+ans =
+6*a*x + 2
+>> diff(f,'a',2)
+ans =
+0
