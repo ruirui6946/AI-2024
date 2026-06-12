@@ -1,0 +1,8 @@
+>> A = [2 5 7 1 3];
+>> A + 5
+>> A .* 2
+>> B = -1:1:3
+>> A .* B % element-by-element multiplication
+>> A * B % matrix multiplication!!
+>> C = [1 2 3]
+>> A .* C % A and C must have the same length
