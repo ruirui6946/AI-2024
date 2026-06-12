@@ -1,0 +1,5 @@
+>> simplify(sin(x)^2 + cos(x)^2)
+>> syms a b c
+>> simplify(exp(c*log(sqrt(a+b))))
+>> S = [(x^2+5*x+6)/(x+2),sqrt(16)];
+>> R = simplify(S)
