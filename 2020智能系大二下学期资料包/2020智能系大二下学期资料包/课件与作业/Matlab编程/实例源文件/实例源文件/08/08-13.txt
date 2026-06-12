@@ -1,0 +1,9 @@
+A=[  2     6     9
+     7     5     7
+     4     9     4
+     9     9     3
+     9     7     4];
+subplot(2,2,1),bar3(A,'detached'),title('detached');
+subplot(2,2,2),bar3(A,'grouped'),title('grouped');
+subplot(2,2,3),bar3(A,'stacked'),title('stacked');
+subplot(2,2,4),bar3h(A,'detached'),title('detached');
