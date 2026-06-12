@@ -1,0 +1,2 @@
+>> x = strmatch('max', strvcat('max', 'minimax', 'maximum'))
+>> x = strmatch('max', strvcat('max', 'minimax', 'maximum'),'exact')
