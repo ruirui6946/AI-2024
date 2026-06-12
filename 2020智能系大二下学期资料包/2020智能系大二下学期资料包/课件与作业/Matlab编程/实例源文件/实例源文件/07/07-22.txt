@@ -1,0 +1,4 @@
+>> syms x
+>> fcos = cos(x);
+>> ezplot(fcos)
+>> grid
