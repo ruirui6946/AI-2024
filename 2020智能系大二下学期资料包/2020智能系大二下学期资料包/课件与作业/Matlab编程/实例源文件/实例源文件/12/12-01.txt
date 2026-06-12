@@ -1,0 +1,3 @@
+>> whos -file matlab.mat
+>> load matlab.mat
+>> num_of_cluster
