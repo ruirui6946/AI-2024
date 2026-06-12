@@ -1,0 +1,3 @@
+>> str=['String Searching and Replacing']
+>> findstr(str,'and')
+>> findstr('and',str)
