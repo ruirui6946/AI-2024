@@ -1,0 +1,7 @@
+>> x=int8(45)
+>> y=int8(-2)
+>> z1=x+y
+>> z2=x-y
+>> z3=x*y
+>> z4=x/y
+>> class(z1),class(z2),class(z3),class(z4)
