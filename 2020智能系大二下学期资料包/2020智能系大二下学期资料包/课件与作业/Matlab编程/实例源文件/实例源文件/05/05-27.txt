@@ -1,0 +1,3 @@
+>> person(2).gender
+>> person(2).gender='male';
+>> person(2)
