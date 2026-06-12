@@ -1,0 +1,6 @@
+>> syms x y z
+>> F = [x*y*z; y; x+z];
+>> v = [x,y,z];
+>> R=jacobian(F,v)
+>> syms a b c
+>> jacobian(a*x^2+b*y^2+c*z^2,v)
