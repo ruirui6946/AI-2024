@@ -1,0 +1,9 @@
+>> syms t
+>> f = t^4;
+>> laplace(f)
+>> syms s 
+>> g = 1/sqrt(s);
+>> laplace(g)
+>> syms a t x
+>> f = exp(-a*t);
+>> laplace(f,x)
