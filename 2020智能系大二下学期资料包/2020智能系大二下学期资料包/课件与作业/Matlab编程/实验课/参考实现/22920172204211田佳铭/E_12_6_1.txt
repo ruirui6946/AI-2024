@@ -1,0 +1,6 @@
+>> t=0:pi/20:2*pi;
+>> plot(t,t.*cos(t),'-.r*')
+>> hold on
+>> plot(exp(t/100).*sin(t-pi/2),'--mo')
+>> plot(sin(t-pi),':bs')
+>> hold on
