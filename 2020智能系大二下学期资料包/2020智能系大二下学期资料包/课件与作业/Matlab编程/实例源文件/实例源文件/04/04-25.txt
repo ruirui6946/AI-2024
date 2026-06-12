@@ -1,0 +1,16 @@
+function dydx = twoode(x,y)
+  dydx = [ y(2) 
+           -abs(y(1))];
+
+
+function res = twobc(ya,yb)
+  res = [ ya(1) 
+          yb(1) + 2];
+
+>> solinit = bvpinit(linspace(0,4,5),[1 0]);
+
+>> sol = bvp4c(@twoode,@twobc,solinit);
+
+>> x = linspace(0,4);
+>> y = deval(sol,x);
+>> plot(x,y(1,:));
