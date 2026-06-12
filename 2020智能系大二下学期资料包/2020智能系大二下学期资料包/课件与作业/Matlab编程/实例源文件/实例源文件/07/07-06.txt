@@ -1,0 +1,7 @@
+>> syms a b c x
+>> f=a*x^2+b*x+c
+>> findsym(f)
+>> a1=1;b1=2;c1=1;
+>> g=a1*x^2+b1*x+c1
+>> findsym(g)
+
