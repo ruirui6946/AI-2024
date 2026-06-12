@@ -1,0 +1,4 @@
+>> x=[-2:0.2:3];
+>> y=exp(x);
+>> plot(x,y);
+>> text(2,exp(2),'\rightarrow y=e^x');
