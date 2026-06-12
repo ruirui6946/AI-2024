@@ -1,0 +1,477 @@
+Microsoft (R) Macro Assembler Version 6.11		    05/24/19 02:06:33
+tempfile.asm						     Page 1 - 1
+
+
+ 0000				DATAS SEGMENT
+				    ;此处输入数据段代码  
+ 0000				DATAS ENDS
+
+ 0000				STACKS SEGMENT
+				    ;此处输入堆栈段代码
+ 0000				STACKS ENDS
+
+ 0000				CODES SEGMENT
+				    ASSUME CS:CODES,DS:DATAS,SS:STACKS
+ 0000				START:
+				NJIE MACRO NA  
+				    LOCAL PRINT0,MULADD,DECBX
+				    MOV BL,NA
+				    CMP BL,0
+				    JE PRINT0
+				    CMP BL,1
+				    JE PRINT0
+				    CMP DX,0
+				    JNE MULADD
+				    MUL BX
+				    JMP DECBX
+				MULADD:
+				    PUSH CX
+				    PUSH AX
+				    MOV AX,DX
+				    MUL BX
+				    MOV DX,AX
+				    POP AX
+				    PUSH DX
+				    MUL BX
+				    POP CX
+				    ADD DX,CX
+				    POP CX 
+				    
+				DECBX:
+				    DEC BL
+				    
+				    IF NA	
+				    NJIE NA-1
+				    ENDIF
+				    
+				PRINT0:    
+				ENDM
+
+ 0000  B8 ---- R		    MOV AX,DATAS
+ 0003  8E D8			    MOV DS,AX
+				    
+ 0005  B8 0001			    MOV AX,1
+ 0008  BB 0000			    MOV BX,0
+ 000B  BA 0000			    MOV DX,0
+
+				    NJIE 10;调用宏
+ 000E  B3 0A		     1	    MOV BL,10
+ 0010  80 FB 00		     1	    CMP BL,0
+ 0013  75 03 E9 01D3	     1	    JE ??0000
+ 0018  80 FB 01		     1	    CMP BL,1
+ 001B  75 03 E9 01CB	     1	    JE ??0000
+ 0020  83 FA 00		     1	    CMP DX,0
+ 0023  75 04		     1	    JNE ??0001
+ 0025  F7 E3		     1	    MUL BX
+ 0027  EB 10		     1	    JMP ??0002
+ 0029			     1	??0001:
+ 0029  51		     1	    PUSH CX
+ 002A  50		     1	    PUSH AX
+ 002B  8B C2		     1	    MOV AX,DX
+ 002D  F7 E3		     1	    MUL BX
+ 002F  8B D0		     1	    MOV DX,AX
+ 0031  58		     1	    POP AX
+ 0032  52		     1	    PUSH DX
+ 0033  F7 E3		     1	    MUL BX
+ 0035  59		     1	    POP CX
+ 0036  03 D1		     1	    ADD DX,CX
+ 0038  59		     1	    POP CX 
+ 0039			     1	??0002:
+ 0039  FE CB		     1	    DEC BL
+ 003B  B3 09		     2	    MOV BL,10-1
+ 003D  80 FB 00		     2	    CMP BL,0
+ 0040  75 03 E9 01A6	     2	    JE ??0003
+ 0045  80 FB 01		     2	    CMP BL,1
+ 0048  75 03 E9 019E	     2	    JE ??0003
+ 004D  83 FA 00		     2	    CMP DX,0
+ 0050  75 04		     2	    JNE ??0004
+ 0052  F7 E3		     2	    MUL BX
+ 0054  EB 10		     2	    JMP ??0005
+ 0056			     2	??0004:
+ 0056  51		     2	    PUSH CX
+ 0057  50		     2	    PUSH AX
+ 0058  8B C2		     2	    MOV AX,DX
+ 005A  F7 E3		     2	    MUL BX
+ 005C  8B D0		     2	    MOV DX,AX
+ 005E  58		     2	    POP AX
+ 005F  52		     2	    PUSH DX
+ 0060  F7 E3		     2	    MUL BX
+ 0062  59		     2	    POP CX
+ 0063  03 D1		     2	    ADD DX,CX
+ 0065  59		     2	    POP CX 
+ 0066			     2	??0005:
+ 0066  FE CB		     2	    DEC BL
+ 0068  B3 08		     3	    MOV BL,10-1-1
+ 006A  80 FB 00		     3	    CMP BL,0
+ 006D  75 03 E9 0179	     3	    JE ??0006
+ 0072  80 FB 01		     3	    CMP BL,1
+ 0075  75 03 E9 0171	     3	    JE ??0006
+ 007A  83 FA 00		     3	    CMP DX,0
+ 007D  75 04		     3	    JNE ??0007
+ 007F  F7 E3		     3	    MUL BX
+ 0081  EB 10		     3	    JMP ??0008
+ 0083			     3	??0007:
+ 0083  51		     3	    PUSH CX
+ 0084  50		     3	    PUSH AX
+ 0085  8B C2		     3	    MOV AX,DX
+ 0087  F7 E3		     3	    MUL BX
+ 0089  8B D0		     3	    MOV DX,AX
+ 008B  58		     3	    POP AX
+ 008C  52		     3	    PUSH DX
+ 008D  F7 E3		     3	    MUL BX
+ 008F  59		     3	    POP CX
+ 0090  03 D1		     3	    ADD DX,CX
+ 0092  59		     3	    POP CX 
+ 0093			     3	??0008:
+ 0093  FE CB		     3	    DEC BL
+ 0095  B3 07		     4	    MOV BL,10-1-1-1
+ 0097  80 FB 00		     4	    CMP BL,0
+ 009A  75 03 E9 014C	     4	    JE ??0009
+ 009F  80 FB 01		     4	    CMP BL,1
+ 00A2  75 03 E9 0144	     4	    JE ??0009
+ 00A7  83 FA 00		     4	    CMP DX,0
+ 00AA  75 04		     4	    JNE ??000A
+ 00AC  F7 E3		     4	    MUL BX
+ 00AE  EB 10		     4	    JMP ??000B
+ 00B0			     4	??000A:
+ 00B0  51		     4	    PUSH CX
+ 00B1  50		     4	    PUSH AX
+ 00B2  8B C2		     4	    MOV AX,DX
+ 00B4  F7 E3		     4	    MUL BX
+ 00B6  8B D0		     4	    MOV DX,AX
+ 00B8  58		     4	    POP AX
+ 00B9  52		     4	    PUSH DX
+ 00BA  F7 E3		     4	    MUL BX
+ 00BC  59		     4	    POP CX
+ 00BD  03 D1		     4	    ADD DX,CX
+ 00BF  59		     4	    POP CX 
+ 00C0			     4	??000B:
+ 00C0  FE CB		     4	    DEC BL
+ 00C2  B3 06		     5	    MOV BL,10-1-1-1-1
+ 00C4  80 FB 00		     5	    CMP BL,0
+ 00C7  75 03 E9 011F	     5	    JE ??000C
+ 00CC  80 FB 01		     5	    CMP BL,1
+ 00CF  75 03 E9 0117	     5	    JE ??000C
+ 00D4  83 FA 00		     5	    CMP DX,0
+ 00D7  75 04		     5	    JNE ??000D
+ 00D9  F7 E3		     5	    MUL BX
+ 00DB  EB 10		     5	    JMP ??000E
+ 00DD			     5	??000D:
+ 00DD  51		     5	    PUSH CX
+ 00DE  50		     5	    PUSH AX
+ 00DF  8B C2		     5	    MOV AX,DX
+ 00E1  F7 E3		     5	    MUL BX
+ 00E3  8B D0		     5	    MOV DX,AX
+ 00E5  58		     5	    POP AX
+ 00E6  52		     5	    PUSH DX
+ 00E7  F7 E3		     5	    MUL BX
+ 00E9  59		     5	    POP CX
+ 00EA  03 D1		     5	    ADD DX,CX
+ 00EC  59		     5	    POP CX 
+ 00ED			     5	??000E:
+ 00ED  FE CB		     5	    DEC BL
+ 00EF  B3 05		     6	    MOV BL,10-1-1-1-1-1
+ 00F1  80 FB 00		     6	    CMP BL,0
+ 00F4  75 03 E9 00F2	     6	    JE ??000F
+ 00F9  80 FB 01		     6	    CMP BL,1
+ 00FC  75 03 E9 00EA	     6	    JE ??000F
+ 0101  83 FA 00		     6	    CMP DX,0
+ 0104  75 04		     6	    JNE ??0010
+ 0106  F7 E3		     6	    MUL BX
+ 0108  EB 10		     6	    JMP ??0011
+ 010A			     6	??0010:
+ 010A  51		     6	    PUSH CX
+ 010B  50		     6	    PUSH AX
+ 010C  8B C2		     6	    MOV AX,DX
+ 010E  F7 E3		     6	    MUL BX
+ 0110  8B D0		     6	    MOV DX,AX
+ 0112  58		     6	    POP AX
+ 0113  52		     6	    PUSH DX
+ 0114  F7 E3		     6	    MUL BX
+ 0116  59		     6	    POP CX
+ 0117  03 D1		     6	    ADD DX,CX
+ 0119  59		     6	    POP CX 
+ 011A			     6	??0011:
+ 011A  FE CB		     6	    DEC BL
+ 011C  B3 04		     7	    MOV BL,10-1-1-1-1-1-1
+ 011E  80 FB 00		     7	    CMP BL,0
+ 0121  75 03 E9 00C5	     7	    JE ??0012
+ 0126  80 FB 01		     7	    CMP BL,1
+ 0129  75 03 E9 00BD	     7	    JE ??0012
+ 012E  83 FA 00		     7	    CMP DX,0
+ 0131  75 04		     7	    JNE ??0013
+ 0133  F7 E3		     7	    MUL BX
+ 0135  EB 10		     7	    JMP ??0014
+ 0137			     7	??0013:
+ 0137  51		     7	    PUSH CX
+ 0138  50		     7	    PUSH AX
+ 0139  8B C2		     7	    MOV AX,DX
+ 013B  F7 E3		     7	    MUL BX
+ 013D  8B D0		     7	    MOV DX,AX
+ 013F  58		     7	    POP AX
+ 0140  52		     7	    PUSH DX
+ 0141  F7 E3		     7	    MUL BX
+ 0143  59		     7	    POP CX
+ 0144  03 D1		     7	    ADD DX,CX
+ 0146  59		     7	    POP CX 
+ 0147			     7	??0014:
+ 0147  FE CB		     7	    DEC BL
+ 0149  B3 03		     8	    MOV BL,10-1-1-1-1-1-1-1
+ 014B  80 FB 00		     8	    CMP BL,0
+ 014E  75 03 E9 0098	     8	    JE ??0015
+ 0153  80 FB 01		     8	    CMP BL,1
+ 0156  75 03 E9 0090	     8	    JE ??0015
+ 015B  83 FA 00		     8	    CMP DX,0
+ 015E  75 04		     8	    JNE ??0016
+ 0160  F7 E3		     8	    MUL BX
+ 0162  EB 10		     8	    JMP ??0017
+ 0164			     8	??0016:
+ 0164  51		     8	    PUSH CX
+ 0165  50		     8	    PUSH AX
+ 0166  8B C2		     8	    MOV AX,DX
+ 0168  F7 E3		     8	    MUL BX
+ 016A  8B D0		     8	    MOV DX,AX
+ 016C  58		     8	    POP AX
+ 016D  52		     8	    PUSH DX
+ 016E  F7 E3		     8	    MUL BX
+ 0170  59		     8	    POP CX
+ 0171  03 D1		     8	    ADD DX,CX
+ 0173  59		     8	    POP CX 
+ 0174			     8	??0017:
+ 0174  FE CB		     8	    DEC BL
+ 0176  B3 02		     9	    MOV BL,10-1-1-1-1-1-1-1-1
+ 0178  80 FB 00		     9	    CMP BL,0
+ 017B  74 6E		     9	    JE ??0018
+ 017D  80 FB 01		     9	    CMP BL,1
+ 0180  74 69		     9	    JE ??0018
+ 0182  83 FA 00		     9	    CMP DX,0
+ 0185  75 04		     9	    JNE ??0019
+ 0187  F7 E3		     9	    MUL BX
+ 0189  EB 10		     9	    JMP ??001A
+ 018B			     9	??0019:
+ 018B  51		     9	    PUSH CX
+ 018C  50		     9	    PUSH AX
+ 018D  8B C2		     9	    MOV AX,DX
+ 018F  F7 E3		     9	    MUL BX
+ 0191  8B D0		     9	    MOV DX,AX
+ 0193  58		     9	    POP AX
+ 0194  52		     9	    PUSH DX
+ 0195  F7 E3		     9	    MUL BX
+ 0197  59		     9	    POP CX
+ 0198  03 D1		     9	    ADD DX,CX
+ 019A  59		     9	    POP CX 
+ 019B			     9	??001A:
+ 019B  FE CB		     9	    DEC BL
+ 019D  B3 01		    10	    MOV BL,10-1-1-1-1-1-1-1-1-1
+ 019F  80 FB 00		    10	    CMP BL,0
+ 01A2  74 47		    10	    JE ??001B
+ 01A4  80 FB 01		    10	    CMP BL,1
+ 01A7  74 42		    10	    JE ??001B
+ 01A9  83 FA 00		    10	    CMP DX,0
+ 01AC  75 04		    10	    JNE ??001C
+ 01AE  F7 E3		    10	    MUL BX
+ 01B0  EB 10		    10	    JMP ??001D
+ 01B2			    10	??001C:
+ 01B2  51		    10	    PUSH CX
+ 01B3  50		    10	    PUSH AX
+ 01B4  8B C2		    10	    MOV AX,DX
+ 01B6  F7 E3		    10	    MUL BX
+ 01B8  8B D0		    10	    MOV DX,AX
+ 01BA  58		    10	    POP AX
+ 01BB  52		    10	    PUSH DX
+ 01BC  F7 E3		    10	    MUL BX
+ 01BE  59		    10	    POP CX
+ 01BF  03 D1		    10	    ADD DX,CX
+ 01C1  59		    10	    POP CX 
+ 01C2			    10	??001D:
+ 01C2  FE CB		    10	    DEC BL
+ 01C4  B3 00		    11	    MOV BL,10-1-1-1-1-1-1-1-1-1-1
+ 01C6  80 FB 00		    11	    CMP BL,0
+ 01C9  74 20		    11	    JE ??001E
+ 01CB  80 FB 01		    11	    CMP BL,1
+ 01CE  74 1B		    11	    JE ??001E
+ 01D0  83 FA 00		    11	    CMP DX,0
+ 01D3  75 04		    11	    JNE ??001F
+ 01D5  F7 E3		    11	    MUL BX
+ 01D7  EB 10		    11	    JMP ??0020
+ 01D9			    11	??001F:
+ 01D9  51		    11	    PUSH CX
+ 01DA  50		    11	    PUSH AX
+ 01DB  8B C2		    11	    MOV AX,DX
+ 01DD  F7 E3		    11	    MUL BX
+ 01DF  8B D0		    11	    MOV DX,AX
+ 01E1  58		    11	    POP AX
+ 01E2  52		    11	    PUSH DX
+ 01E3  F7 E3		    11	    MUL BX
+ 01E5  59		    11	    POP CX
+ 01E6  03 D1		    11	    ADD DX,CX
+ 01E8  59		    11	    POP CX 
+ 01E9			    11	??0020:
+ 01E9  FE CB		    11	    DEC BL
+ 01EB			    11	??001E:    
+ 01EB			    10	??001B:    
+ 01EB			     9	??0018:    
+ 01EB			     8	??0015:    
+ 01EB			     7	??0012:    
+ 01EB			     6	??000F:    
+ 01EB			     5	??000C:    
+ 01EB			     4	??0009:    
+ 01EB			     3	??0006:    
+ 01EB			     2	??0003:    
+ 01EB			     1	??0000:    
+				    
+				    ;;
+				    ;MOV DX,37H
+				    ;MOV AX,5F00H
+				    ;;
+				    
+ 01EB  BB 000A			    MOV BX,10
+ 01EE  53			    PUSH BX
+ 01EF  83 FA 00			    CMP DX,0
+ 01F2  74 2E			    JE PUSH_AGAIN
+ 01F4  B9 000F			    MOV CX,0FH
+ 01F7  3B D1			    CMP DX,CX
+ 01F9  73 0D			    JAE DIV10
+ 01FB  83 F8 F0			    CMP AX,0FFF0H
+ 01FE  77 08			    JA DIV10
+ 0200  B9 000A			    MOV CX,10
+ 0203  F7 F1			    DIV CX
+ 0205  52			    PUSH DX
+ 0206  EB 1A			    JMP PUSH_AGAIN
+ 0208				DIV10:
+ 0208  B9 0064			    MOV CX,100
+ 020B  F7 F1			    DIV CX
+ 020D  50			    PUSH AX
+ 020E  8B C2			    MOV AX,DX
+ 0210  B1 0A			    MOV CL,10
+ 0212  F6 F1			    DIV CL
+ 0214  8B C8			    MOV CX,AX
+ 0216  58			    POP AX
+ 0217  B6 00			    MOV DH,0
+ 0219  8A D5			    MOV DL,CH
+ 021B  52			    PUSH DX
+ 021C  8A D1			    MOV DL,CL
+ 021E  52			    PUSH DX
+				    
+				    
+				    ;CMP DX,0
+				    ;JE PUSH_AGAIN
+				    ;MOV CX,100;10阶会溢出
+				    ;DIV CX
+				    ;PUSH AX
+				    ;MOV AX,DX
+				    ;CMP AX,10
+				    ;JAE DIV10
+				    ;POP AX
+				    ;PUSH DX
+				    ;JMP PUSH_AGAIN
+				;DIV10:
+				    ;MOV CL,10
+				    ;DIV CL
+				    ;MOV CX,AX
+				    ;POP AX
+				    ;MOV DH,0
+				    ;MOV DL,CH
+				    ;PUSH DX
+				    ;MOV DL,CL
+				    ;PUSH DX
+				    
+				    ;;;;
+ 021F  BA 0000			    MOV DX,0
+ 0222				PUSH_AGAIN:
+
+ 0222  B9 000A			    MOV CX,10
+ 0225  F7 F1			    DIV CX
+ 0227  8B DA			    MOV BX,DX
+ 0229  53			    PUSH BX
+ 022A  83 F8 00			    CMP AX,0
+ 022D  74 05			    JE POP_AGAIN
+ 022F  BA 0000			    MOV DX,0
+ 0232  EB EE			    JMP PUSH_AGAIN
+				    
+ 0234				POP_AGAIN:
+				    
+ 0234  5A			    POP DX
+ 0235  83 FA 0A			    CMP DX,10
+ 0238  74 09			    JE  END_OUT
+ 023A  83 C2 30			    ADD DX,30H
+ 023D  B4 02			    MOV AH,2
+ 023F  CD 21			    INT 21H
+
+ 0241  EB F1			    JMP POP_AGAIN
+				    
+ 0243				END_OUT: 
+				       
+ 0243  B4 4C			    MOV AH,4CH
+ 0245  CD 21			    INT 21H
+				    
+ 0247				CODES ENDS
+				    END START
+
+Microsoft (R) Macro Assembler Version 6.11		    05/24/19 02:06:33
+tempfile.asm						     Symbols 2 - 1
+
+
+
+
+Macros:
+
+                N a m e                 Type
+
+NJIE . . . . . . . . . . . . . .	Proc
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+CODES  . . . . . . . . . . . . .	16 Bit	 0247	  Para	  Private 
+DATAS  . . . . . . . . . . . . .	16 Bit	 0000	  Para	  Private 
+STACKS . . . . . . . . . . . . .	16 Bit	 0000	  Para	  Private 
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+??0000 . . . . . . . . . . . . .	L Near	 01EB	  CODES	
+??0001 . . . . . . . . . . . . .	L Near	 0029	  CODES	
+??0002 . . . . . . . . . . . . .	L Near	 0039	  CODES	
+??0003 . . . . . . . . . . . . .	L Near	 01EB	  CODES	
+??0004 . . . . . . . . . . . . .	L Near	 0056	  CODES	
+??0005 . . . . . . . . . . . . .	L Near	 0066	  CODES	
+??0006 . . . . . . . . . . . . .	L Near	 01EB	  CODES	
+??0007 . . . . . . . . . . . . .	L Near	 0083	  CODES	
+??0008 . . . . . . . . . . . . .	L Near	 0093	  CODES	
+??0009 . . . . . . . . . . . . .	L Near	 01EB	  CODES	
+??000A . . . . . . . . . . . . .	L Near	 00B0	  CODES	
+??000B . . . . . . . . . . . . .	L Near	 00C0	  CODES	
+??000C . . . . . . . . . . . . .	L Near	 01EB	  CODES	
+??000D . . . . . . . . . . . . .	L Near	 00DD	  CODES	
+??000E . . . . . . . . . . . . .	L Near	 00ED	  CODES	
+??000F . . . . . . . . . . . . .	L Near	 01EB	  CODES	
+??0010 . . . . . . . . . . . . .	L Near	 010A	  CODES	
+??0011 . . . . . . . . . . . . .	L Near	 011A	  CODES	
+??0012 . . . . . . . . . . . . .	L Near	 01EB	  CODES	
+??0013 . . . . . . . . . . . . .	L Near	 0137	  CODES	
+??0014 . . . . . . . . . . . . .	L Near	 0147	  CODES	
+??0015 . . . . . . . . . . . . .	L Near	 01EB	  CODES	
+??0016 . . . . . . . . . . . . .	L Near	 0164	  CODES	
+??0017 . . . . . . . . . . . . .	L Near	 0174	  CODES	
+??0018 . . . . . . . . . . . . .	L Near	 01EB	  CODES	
+??0019 . . . . . . . . . . . . .	L Near	 018B	  CODES	
+??001A . . . . . . . . . . . . .	L Near	 019B	  CODES	
+??001B . . . . . . . . . . . . .	L Near	 01EB	  CODES	
+??001C . . . . . . . . . . . . .	L Near	 01B2	  CODES	
+??001D . . . . . . . . . . . . .	L Near	 01C2	  CODES	
+??001E . . . . . . . . . . . . .	L Near	 01EB	  CODES	
+??001F . . . . . . . . . . . . .	L Near	 01D9	  CODES	
+??0020 . . . . . . . . . . . . .	L Near	 01E9	  CODES	
+DIV10  . . . . . . . . . . . . .	L Near	 0208	  CODES	
+END_OUT  . . . . . . . . . . . .	L Near	 0243	  CODES	
+POP_AGAIN  . . . . . . . . . . .	L Near	 0234	  CODES	
+PUSH_AGAIN . . . . . . . . . . .	L Near	 0222	  CODES	
+START  . . . . . . . . . . . . .	L Near	 0000	  CODES	
+
+	   0 Warnings
+	   0 Errors
