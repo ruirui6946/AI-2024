@@ -1,0 +1,8 @@
+% fit sine between 0 and 2*pi using 3 order polyn0mial
+x = 0:pi/10:2*pi;
+y = sin(x);
+z = polyfit(x,y,3);
+plot(x,y,'r*');
+hold on
+f = poly2sym(z);
+ezplot(f,[0,2*pi]);
