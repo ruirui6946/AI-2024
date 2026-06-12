@@ -1,0 +1,142 @@
+Microsoft (R) Macro Assembler Version 6.11		    05/23/19 23:04:37
+tempfile.asm						     Page 1 - 1
+
+
+ 0000				DATAS SEGMENT
+				    ;此处输入数据段代码  
+ 0000				DATAS ENDS
+
+ 0000				STACKS SEGMENT
+				    ;此处输入堆栈段代码
+ 0000				STACKS ENDS
+
+ 0000				CODES SEGMENT
+				    ASSUME CS:CODES,DS:DATAS,SS:STACKS
+ 0000				START:
+				NJIE MACRO NA  
+				    LOCAL PRINT0,ENDD
+				    MOV BL,NA
+				    CMP BL,0
+				    JE PRINT0
+				    CMP BL,1
+				    JE PRINT0
+				    MUL BL
+				    DEC BL
+				    
+				    IF NA	
+				    NJIE NA-1
+				    ENDIF
+				    JMP ENDD
+				    
+				PRINT0:
+				    ;MOV CL,1
+				ENDD:     
+				ENDM
+
+ 0000  B8 ---- R		    MOV AX,DATAS
+ 0003  8E D8			    MOV DS,AX
+				    
+ 0005  B0 01			    MOV AL,1
+ 0007  B3 00			    MOV BL,0
+ 0009				USE:
+				    NJIE 3
+ 0009  B3 03		     1	    MOV BL,3
+ 000B  80 FB 00		     1	    CMP BL,0
+ 000E  74 41		     1	    JE ??0000
+ 0010  80 FB 01		     1	    CMP BL,1
+ 0013  74 3C		     1	    JE ??0000
+ 0015  F6 E3		     1	    MUL BL
+ 0017  FE CB		     1	    DEC BL
+ 0019  B3 02		     2	    MOV BL,3-1
+ 001B  80 FB 00		     2	    CMP BL,0
+ 001E  74 2F		     2	    JE ??0002
+ 0020  80 FB 01		     2	    CMP BL,1
+ 0023  74 2A		     2	    JE ??0002
+ 0025  F6 E3		     2	    MUL BL
+ 0027  FE CB		     2	    DEC BL
+ 0029  B3 01		     3	    MOV BL,3-1-1
+ 002B  80 FB 00		     3	    CMP BL,0
+ 002E  74 1D		     3	    JE ??0004
+ 0030  80 FB 01		     3	    CMP BL,1
+ 0033  74 18		     3	    JE ??0004
+ 0035  F6 E3		     3	    MUL BL
+ 0037  FE CB		     3	    DEC BL
+ 0039  B3 00		     4	    MOV BL,3-1-1-1
+ 003B  80 FB 00		     4	    CMP BL,0
+ 003E  74 0B		     4	    JE ??0006
+ 0040  80 FB 01		     4	    CMP BL,1
+ 0043  74 06		     4	    JE ??0006
+ 0045  F6 E3		     4	    MUL BL
+ 0047  FE CB		     4	    DEC BL
+ 0049  EB 00		     4	    JMP ??0007
+ 004B			     4	??0006:
+ 004B			     4	??0007:     
+ 004B  EB 00		     3	    JMP ??0005
+ 004D			     3	??0004:
+ 004D			     3	??0005:     
+ 004D  EB 00		     2	    JMP ??0003
+ 004F			     2	??0002:
+ 004F			     2	??0003:     
+ 004F  EB 00		     1	    JMP ??0001
+ 0051			     1	??0000:
+ 0051			     1	??0001:     
+				    ;CMP CL,1
+				    ;JE PRINT1
+ 0051  8A D0			    MOV DL,AL
+ 0053  80 C2 30			    ADD DL,30H
+ 0056  B4 02			    MOV AH,2
+ 0058  CD 21			    INT 21H
+				;    JMP ENDNJIE
+				;PRINT1:
+				;    MOV DL,31H
+				;    MOV AH,2
+				;    INT 21H
+				    
+ 005A				ENDNJIE:
+				    
+ 005A  B4 4C			    MOV AH,4CH
+ 005C  CD 21			    INT 21H
+				    
+ 005E				CODES ENDS
+				    END START
+
+Microsoft (R) Macro Assembler Version 6.11		    05/23/19 23:04:37
+tempfile.asm						     Symbols 2 - 1
+
+
+
+
+Macros:
+
+                N a m e                 Type
+
+NJIE . . . . . . . . . . . . . .	Proc
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+CODES  . . . . . . . . . . . . .	16 Bit	 005E	  Para	  Private 
+DATAS  . . . . . . . . . . . . .	16 Bit	 0000	  Para	  Private 
+STACKS . . . . . . . . . . . . .	16 Bit	 0000	  Para	  Private 
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+??0000 . . . . . . . . . . . . .	L Near	 0051	  CODES	
+??0001 . . . . . . . . . . . . .	L Near	 0051	  CODES	
+??0002 . . . . . . . . . . . . .	L Near	 004F	  CODES	
+??0003 . . . . . . . . . . . . .	L Near	 004F	  CODES	
+??0004 . . . . . . . . . . . . .	L Near	 004D	  CODES	
+??0005 . . . . . . . . . . . . .	L Near	 004D	  CODES	
+??0006 . . . . . . . . . . . . .	L Near	 004B	  CODES	
+??0007 . . . . . . . . . . . . .	L Near	 004B	  CODES	
+ENDNJIE  . . . . . . . . . . . .	L Near	 005A	  CODES	
+START  . . . . . . . . . . . . .	L Near	 0000	  CODES	
+USE  . . . . . . . . . . . . . .	L Near	 0009	  CODES	
+
+	   0 Warnings
+	   0 Errors
