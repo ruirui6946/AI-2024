@@ -1,0 +1,6 @@
+>> h_f=@(x)(sin(x)-0.6);
+>> [x1,y1]=fzero(h_f,[0,pi/2])
+>> [x2,y2]=fzero(h_f,[pi/2,pi])
+>> [x3,y3]=fzero(h_f,0)
+>> [x4,y4]=fzero(h_f,pi)
+
