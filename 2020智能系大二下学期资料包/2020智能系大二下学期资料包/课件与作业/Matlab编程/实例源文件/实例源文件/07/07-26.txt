@@ -1,0 +1,5 @@
+>> syms x y
+>> z=x*exp(-x^2-y^2);
+>> subplot(1,2,1),ezmesh(z,[-2.5,2.5],30);
+>> colormap([0 0 1])
+>> subplot(1,2,2),ezsurf(z,[-2.5,2.5],30);
