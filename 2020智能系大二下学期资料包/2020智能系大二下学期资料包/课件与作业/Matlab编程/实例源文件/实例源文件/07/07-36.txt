@@ -1,0 +1,2 @@
+>> syms x y alpha
+>> [x,y] = solve(x^2*y^2, x-y/2-alpha)
