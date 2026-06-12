@@ -1,0 +1,16 @@
+% Interpolation using the four methods
+x=[0 3 5 7 9 11 12 13 14 15];
+y=[0 1.2 1.7 2.0 2.1 2.0 1.8 1.2 1.4 1.6];
+length_of_x=length(x);
+scalar_x=[x(1):0.5:x(length_of_x)];
+length_of_sx=length(scalar_x);
+for i=1:length_of_sx
+    y_nearest(i)=interp1(x,y,scalar_x(i),'nearest');
+    y_linear(i) =interp1(x,y,scalar_x(i),'linear');
+    y_spline(i) =interp1(x,y,scalar_x(i),'spline');
+    y_cubic(i)  =interp1(x,y,scalar_x(i),'cubic');
+end
+subplot(2,2,1),plot(x,y,'*'),hold on,plot(scalar_x,y_nearest),title('method=nearest');
+subplot(2,2,2),plot(x,y,'*'),hold on,plot(scalar_x,y_linear),title('method=linear');
+subplot(2,2,3),plot(x,y,'*'),hold on,plot(scalar_x,y_spline),title('method=spline');
+subplot(2,2,4),plot(x,y,'*'),hold on,plot(scalar_x,y_cubic),title('method=cubic');
