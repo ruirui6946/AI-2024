@@ -1,0 +1,5 @@
+>> sym x;
+>> g=4*x^3+x^4+8*x+5*x^2+6
+>> h=factor(g)
+>> factor(84)
+>> factor(sym('84'))
