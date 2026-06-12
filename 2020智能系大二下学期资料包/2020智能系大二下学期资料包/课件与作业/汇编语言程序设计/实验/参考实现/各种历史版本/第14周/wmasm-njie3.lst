@@ -1,0 +1,173 @@
+Microsoft (R) Macro Assembler Version 6.11		    05/24/19 00:52:30
+tempfile.asm						     Page 1 - 1
+
+
+				.386
+ 00000000			DATAS SEGMENT
+				    ;此处输入数据段代码  
+ 0000				DATAS ENDS
+
+ 00000000			STACKS SEGMENT
+				    ;此处输入堆栈段代码
+ 0000				STACKS ENDS
+
+ 00000000			CODES SEGMENT
+				    ASSUME CS:CODES,DS:DATAS,SS:STACKS
+ 00000000			START:
+				NJIE MACRO NA  
+				    LOCAL PRINT0
+				    MOV BL,NA
+				    CMP BL,0
+				    JE PRINT0
+				    CMP BL,1
+				    JE PRINT0
+				    MUL EBX
+				    DEC BL
+				    
+				    IF NA	
+				    NJIE NA-1
+				    ENDIF
+				    
+				PRINT0:    
+				ENDM
+
+ 00000000  66| B8 ---- R	    MOV AX,DATAS
+ 00000004  66| 8E D8		    MOV DS,AX
+				    
+ 00000007  B8 00000001		    MOV EAX,1
+ 0000000C  BB 00000000		    MOV EBX,0
+
+				    NJIE 5
+ 00000011  B3 05	     1	    MOV BL,5
+ 00000013  80 FB 00	     1	    CMP BL,0
+ 00000016  74 59	     1	    JE ??0000
+ 00000018  80 FB 01	     1	    CMP BL,1
+ 0000001B  74 54	     1	    JE ??0000
+ 0000001D  F7 E3	     1	    MUL EBX
+ 0000001F  FE CB	     1	    DEC BL
+ 00000021  B3 04	     2	    MOV BL,5-1
+ 00000023  80 FB 00	     2	    CMP BL,0
+ 00000026  74 49	     2	    JE ??0001
+ 00000028  80 FB 01	     2	    CMP BL,1
+ 0000002B  74 44	     2	    JE ??0001
+ 0000002D  F7 E3	     2	    MUL EBX
+ 0000002F  FE CB	     2	    DEC BL
+ 00000031  B3 03	     3	    MOV BL,5-1-1
+ 00000033  80 FB 00	     3	    CMP BL,0
+ 00000036  74 39	     3	    JE ??0002
+ 00000038  80 FB 01	     3	    CMP BL,1
+ 0000003B  74 34	     3	    JE ??0002
+ 0000003D  F7 E3	     3	    MUL EBX
+ 0000003F  FE CB	     3	    DEC BL
+ 00000041  B3 02	     4	    MOV BL,5-1-1-1
+ 00000043  80 FB 00	     4	    CMP BL,0
+ 00000046  74 29	     4	    JE ??0003
+ 00000048  80 FB 01	     4	    CMP BL,1
+ 0000004B  74 24	     4	    JE ??0003
+ 0000004D  F7 E3	     4	    MUL EBX
+ 0000004F  FE CB	     4	    DEC BL
+ 00000051  B3 01	     5	    MOV BL,5-1-1-1-1
+ 00000053  80 FB 00	     5	    CMP BL,0
+ 00000056  74 19	     5	    JE ??0004
+ 00000058  80 FB 01	     5	    CMP BL,1
+ 0000005B  74 14	     5	    JE ??0004
+ 0000005D  F7 E3	     5	    MUL EBX
+ 0000005F  FE CB	     5	    DEC BL
+ 00000061  B3 00	     6	    MOV BL,5-1-1-1-1-1
+ 00000063  80 FB 00	     6	    CMP BL,0
+ 00000066  74 09	     6	    JE ??0005
+ 00000068  80 FB 01	     6	    CMP BL,1
+ 0000006B  74 04	     6	    JE ??0005
+ 0000006D  F7 E3	     6	    MUL EBX
+ 0000006F  FE CB	     6	    DEC BL
+ 00000071		     6	??0005:    
+ 00000071		     5	??0004:    
+ 00000071		     4	??0003:    
+ 00000071		     3	??0002:    
+ 00000071		     2	??0001:    
+ 00000071		     1	??0000:    
+				    ;MOV DL,AL
+				    ;ADD DL,30H
+				    ;MOV AH,2
+				    ;INT 21H
+				    
+ 00000071  B8 1111FFFE		    MOV EAX,1111FFFEH
+				    ;ADD EAX,1
+				    ;MOV EBX,EAX
+				    ;MOV EAX,EBX
+				    ;DEC EAX
+				    
+ 00000076  66| BA 000A		    MOV DX,10
+ 0000007A  66| 52		    PUSH DX
+ 0000007C  BA 00000000		    MOV EDX,0
+ 00000081			PUSH_AGAIN:
+ 00000081  B9 0000000A		    MOV ECX,10
+ 00000086  F7 F1		    DIV ECX
+ 00000088  8B DA		    MOV EBX,EDX
+ 0000008A  66| 53		    PUSH BX
+ 0000008C  83 F8 00		    CMP EAX,0
+ 0000008F  74 07		    JE POP_AGAIN
+ 00000091  BA 00000000		    MOV EDX,0
+ 00000096  EB E9		    JMP PUSH_AGAIN
+				    
+ 00000098			POP_AGAIN:
+ 00000098  66| 5A		    POP DX
+ 0000009A  66| 83 FA 0A		    CMP DX,10
+ 0000009E  74 0E		    JE END_OUT
+ 000000A0  66| 83 C2 30		    ADD DX,30H
+ 000000A4  B4 02		    MOV AH,2
+ 000000A6  CD 21		    INT 21H
+				    ;;;
+ 000000A8  B4 01		    MOV AH,1
+ 000000AA  CD 21		    INT 21H
+				    ;;;
+ 000000AC  EB EA		    JMP POP_AGAIN
+				    
+ 000000AE			END_OUT: 
+				    ;MOV AH,1
+				    ;INT 21H   
+ 000000AE  B4 4C		    MOV AH,4CH
+ 000000B0  CD 21		    INT 21H
+				    
+ 00B2				CODES ENDS
+				    END START
+
+Microsoft (R) Macro Assembler Version 6.11		    05/24/19 00:52:30
+tempfile.asm						     Symbols 2 - 1
+
+
+
+
+Macros:
+
+                N a m e                 Type
+
+NJIE . . . . . . . . . . . . . .	Proc
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+CODES  . . . . . . . . . . . . .	32 Bit	 00B2	  Para	  Private 
+DATAS  . . . . . . . . . . . . .	32 Bit	 0000	  Para	  Private 
+STACKS . . . . . . . . . . . . .	32 Bit	 0000	  Para	  Private 
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+??0000 . . . . . . . . . . . . .	L Near	 0071	  CODES	
+??0001 . . . . . . . . . . . . .	L Near	 0071	  CODES	
+??0002 . . . . . . . . . . . . .	L Near	 0071	  CODES	
+??0003 . . . . . . . . . . . . .	L Near	 0071	  CODES	
+??0004 . . . . . . . . . . . . .	L Near	 0071	  CODES	
+??0005 . . . . . . . . . . . . .	L Near	 0071	  CODES	
+END_OUT  . . . . . . . . . . . .	L Near	 00AE	  CODES	
+POP_AGAIN  . . . . . . . . . . .	L Near	 0098	  CODES	
+PUSH_AGAIN . . . . . . . . . . .	L Near	 0081	  CODES	
+START  . . . . . . . . . . . . .	L Near	 0000	  CODES	
+
+	   0 Warnings
+	   0 Errors
