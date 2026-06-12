@@ -1,0 +1,5 @@
+>> t = 0:pi/6:4*pi;
+>> [x,y,z] = cylinder(4+cos(t),30);
+>> surf(x,y,z),title('default axis'); 
+>> axis square,title('axis square');
+>> axis equal,title('axis equal');
