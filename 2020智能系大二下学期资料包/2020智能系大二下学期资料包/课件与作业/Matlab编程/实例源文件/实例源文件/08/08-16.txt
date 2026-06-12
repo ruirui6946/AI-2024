@@ -1,0 +1,6 @@
+% the example of the function pie3
+X=[356,588,569];
+[m_v,m_i]=max(x);
+explode=zeros(size(X));
+explode(m_i)=1;
+pie3(X,explode,{'A','B','C'});
