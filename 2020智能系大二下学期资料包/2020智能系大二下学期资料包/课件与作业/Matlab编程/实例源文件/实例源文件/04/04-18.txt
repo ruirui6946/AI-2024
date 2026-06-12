@@ -1,0 +1,2 @@
+>> h_g=@(x,sigma2)exp(-x^2./(2.*(1:sigma2)))./sqrt(2*pi.*(1:sigma2));
+>> quadv(@(x)h_g(x,3),0,2)
