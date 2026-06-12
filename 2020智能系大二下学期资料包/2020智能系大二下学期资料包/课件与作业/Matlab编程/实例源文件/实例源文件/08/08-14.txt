@@ -1,0 +1,3 @@
+>> subplot(1,3,1),area(A),title('area plot of A');
+>> subplot(1,3,2),area(A,3),title('basevalue = 3');
+>> subplot(1,3,3),area([1 3 6 8 9],A),title('x=[1 3 6 8 9]');
