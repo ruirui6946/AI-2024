@@ -1,0 +1,5 @@
+>> dsolve('Dy=1+y^2')
+ans =
+ tan(C3 + t)
+           i
+          -i
