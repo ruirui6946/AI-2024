@@ -1,0 +1,45 @@
+DATAS SEGMENT
+    DATA DB 'there are some blank over me',0DH,0AH,'$'  
+DATAS ENDS
+
+STACKS SEGMENT
+    ;此处输入堆栈段代码
+STACKS ENDS
+
+CODES SEGMENT
+    ASSUME CS:CODES,DS:DATAS,SS:STACKS
+START:
+    MOV AX,DATAS
+    MOV DS,AX
+    MOV AX,04H
+    CALL SKIPLINES
+    LEA DX,DATA
+    MOV AH,9
+    INT 21H 
+    
+    MOV AH,4CH
+    INT 21H
+    
+    
+SKIPLINES PROC
+    PUSH AX
+    PUSH CX
+    PUSH DX
+    MOV CX,AX
+    
+AGAIN:
+    MOV AH,2
+    MOV DL,0DH
+    INT 21H
+    MOV DL,0AH
+    INT 21H
+    LOOP AGAIN
+    
+    POP DX
+    POP CX
+    POP AX
+    
+    RET
+SKIPLINES ENDP
+CODES ENDS
+    END START
