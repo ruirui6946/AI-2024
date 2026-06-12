@@ -1,0 +1,4 @@
+>> syms f g
+>> S = dsolve('Df = 3*f+4*g', 'Dg = -4*f+3*g')
+>> S.f
+>> S.g
