@@ -1,0 +1,5 @@
+>> compass(A)
+>> theta = (-90:10:90)*pi/180;
+>> r = 2*ones(size(theta));
+>> [u,v] = pol2cart(theta,r);
+>> feather(u,v);
