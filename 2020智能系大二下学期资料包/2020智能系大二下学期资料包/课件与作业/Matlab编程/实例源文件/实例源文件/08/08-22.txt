@@ -1,0 +1,3 @@
+>> I=imread('C:\MATLAB\R2010a\images\toolbar.bmp');
+>> imshow(I);
+
