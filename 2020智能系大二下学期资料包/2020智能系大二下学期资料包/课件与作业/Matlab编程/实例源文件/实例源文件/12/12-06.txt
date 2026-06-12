@@ -1,0 +1,5 @@
+>> file_h = fopen('D:\type.txt','w');
+>> fprintf(file_h, '%6.2f %12.8f\n', 1.2, -43.3);
+>> fprintf(file_h, '%6f %12f\n', 1.2, -43.3);
+>> fprintf(file_h, '%.2f %.8f\n', 1.2, -43.3);
+>> fclose(file_h)
