@@ -1,0 +1,6 @@
+>> a=sym('a');
+>> b=sym('b');
+>> x=sym('x');
+>> e=sym('e');
+>> f=a*e^x+b*sin(x)
+>> f=sym('a*e^x+b*sin(x)')
