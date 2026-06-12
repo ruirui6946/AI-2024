@@ -1,0 +1,9 @@
+>> x=[0:10:360]*pi/180;
+>> y=sin(x);
+>> subplot(2,2,1),plot(x,y),title('a');
+>> subplot(2,2,2),stem(x,y),title('b');
+>> subplot(2,2,3),stairs(x,y),title('c');
+>> t = 0:.1:10;
+>> s = 0.1+i;
+>> y = exp(-s*t);
+>> subplot(2,2,4),stem3(real(y),imag(y),t),title('d');
