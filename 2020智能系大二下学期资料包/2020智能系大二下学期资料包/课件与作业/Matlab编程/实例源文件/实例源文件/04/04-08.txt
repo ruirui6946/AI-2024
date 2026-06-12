@@ -1,0 +1,9 @@
+>> x=0:0.5:10;
+>> y=cos(x);
+>> y1=cos(x1);
+>> y2=interp1(x,y,x1,'nearest')           %没有制定外插算法，估值都返回NaN
+>> y2=interp1(x,y,x1,'nearest','extrap')  %指明插值算法也用于外插运算		
+>> y3=interp1(x,y,x1,'linear','extrap');
+>> y4=interp1(x,y,x1,'spline','extrap');
+>> y5=interp1(x,y,x1,'cubic','extrap');
+>> plot(x,y,x1,y1,'o',x1,y2,'-',x1,y3,'-.',x1,y4,'--',x1,y5,'*')
