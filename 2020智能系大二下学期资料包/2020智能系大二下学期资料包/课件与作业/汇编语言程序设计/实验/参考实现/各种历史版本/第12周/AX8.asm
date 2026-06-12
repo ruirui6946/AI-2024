@@ -1,0 +1,67 @@
+DATAS SEGMENT
+    ;此处输入数据段代码  
+DATAS ENDS
+
+STACKS SEGMENT
+    ;此处输入堆栈段代码
+STACKS ENDS
+
+CODES SEGMENT
+    ASSUME CS:CODES,DS:DATAS,SS:STACKS
+START:
+    MOV AX,DATAS
+    MOV DS,AX
+    
+    MOV AX,37
+    CMP AX,0
+    JE PRINT0
+    TEST AX,8000H
+    JZ PRINT8
+    
+    PUSH AX
+    MOV DL,'-'
+    MOV AH,2
+    INT 21H
+    POP AX
+    NEG AX
+
+PRINT8:
+    MOV DX,8
+    PUSH DX
+    MOV DX,0
+    ;;;;
+PUSH_AGAIN:
+
+    MOV CX,8
+    DIV CX
+    MOV BX,DX
+    PUSH BX
+    CMP AX,0
+    JE POP_AGAIN
+    MOV DX,0
+    JMP PUSH_AGAIN
+    
+POP_AGAIN:
+    
+    POP DX
+    CMP DX,8
+    JE  ENDD
+    ADD DX,30H
+    MOV AH,2
+    INT 21H
+    JMP POP_AGAIN
+    
+    ;;;;
+    JMP ENDD
+    
+    
+PRINT0:
+    MOV DL,'0'
+    MOV AH,2
+    INT 21H
+ENDD:
+    
+    MOV AH,4CH
+    INT 21H
+CODES ENDS
+    END START
