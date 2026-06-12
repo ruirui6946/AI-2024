@@ -1,0 +1,3 @@
+>> [x,y,z] = peaks;
+>> [c,h] = contour(x,y,z);
+>> set(h,'LineWidth',3,'LineStyle',':')
