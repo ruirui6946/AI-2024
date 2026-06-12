@@ -1,0 +1,202 @@
+Microsoft (R) Macro Assembler Version 6.11		    05/24/19 01:13:44
+tempfile.asm						     Page 1 - 1
+
+
+ 0000				DATAS SEGMENT
+				    ;此处输入数据段代码  
+ 0000				DATAS ENDS
+
+ 0000				STACKS SEGMENT
+				    ;此处输入堆栈段代码
+ 0000				STACKS ENDS
+
+ 0000				CODES SEGMENT
+				    ASSUME CS:CODES,DS:DATAS,SS:STACKS
+ 0000				START:
+				NJIE MACRO NA  
+				    LOCAL PRINT0
+				    MOV BL,NA
+				    CMP BL,0
+				    JE PRINT0
+				    CMP BL,1
+				    JE PRINT0
+				    MUL BX
+				    DEC BL
+				    
+				    IF NA	
+				    NJIE NA-1
+				    ENDIF
+				    
+				PRINT0:    
+				ENDM
+
+ 0000  B8 ---- R		    MOV AX,DATAS
+ 0003  8E D8			    MOV DS,AX
+				    
+ 0005  B8 0001			    MOV AX,1
+ 0008  BB 0000			    MOV BX,0
+
+				    NJIE 8
+ 000B  B3 08		     1	    MOV BL,8
+ 000D  80 FB 00		     1	    CMP BL,0
+ 0010  75 03 E9 008C	     1	    JE ??0000
+ 0015  80 FB 01		     1	    CMP BL,1
+ 0018  75 03 E9 0084	     1	    JE ??0000
+ 001D  F7 E3		     1	    MUL BX
+ 001F  FE CB		     1	    DEC BL
+ 0021  B3 07		     2	    MOV BL,8-1
+ 0023  80 FB 00		     2	    CMP BL,0
+ 0026  74 79		     2	    JE ??0001
+ 0028  80 FB 01		     2	    CMP BL,1
+ 002B  74 74		     2	    JE ??0001
+ 002D  F7 E3		     2	    MUL BX
+ 002F  FE CB		     2	    DEC BL
+ 0031  B3 06		     3	    MOV BL,8-1-1
+ 0033  80 FB 00		     3	    CMP BL,0
+ 0036  74 69		     3	    JE ??0002
+ 0038  80 FB 01		     3	    CMP BL,1
+ 003B  74 64		     3	    JE ??0002
+ 003D  F7 E3		     3	    MUL BX
+ 003F  FE CB		     3	    DEC BL
+ 0041  B3 05		     4	    MOV BL,8-1-1-1
+ 0043  80 FB 00		     4	    CMP BL,0
+ 0046  74 59		     4	    JE ??0003
+ 0048  80 FB 01		     4	    CMP BL,1
+ 004B  74 54		     4	    JE ??0003
+ 004D  F7 E3		     4	    MUL BX
+ 004F  FE CB		     4	    DEC BL
+ 0051  B3 04		     5	    MOV BL,8-1-1-1-1
+ 0053  80 FB 00		     5	    CMP BL,0
+ 0056  74 49		     5	    JE ??0004
+ 0058  80 FB 01		     5	    CMP BL,1
+ 005B  74 44		     5	    JE ??0004
+ 005D  F7 E3		     5	    MUL BX
+ 005F  FE CB		     5	    DEC BL
+ 0061  B3 03		     6	    MOV BL,8-1-1-1-1-1
+ 0063  80 FB 00		     6	    CMP BL,0
+ 0066  74 39		     6	    JE ??0005
+ 0068  80 FB 01		     6	    CMP BL,1
+ 006B  74 34		     6	    JE ??0005
+ 006D  F7 E3		     6	    MUL BX
+ 006F  FE CB		     6	    DEC BL
+ 0071  B3 02		     7	    MOV BL,8-1-1-1-1-1-1
+ 0073  80 FB 00		     7	    CMP BL,0
+ 0076  74 29		     7	    JE ??0006
+ 0078  80 FB 01		     7	    CMP BL,1
+ 007B  74 24		     7	    JE ??0006
+ 007D  F7 E3		     7	    MUL BX
+ 007F  FE CB		     7	    DEC BL
+ 0081  B3 01		     8	    MOV BL,8-1-1-1-1-1-1-1
+ 0083  80 FB 00		     8	    CMP BL,0
+ 0086  74 19		     8	    JE ??0007
+ 0088  80 FB 01		     8	    CMP BL,1
+ 008B  74 14		     8	    JE ??0007
+ 008D  F7 E3		     8	    MUL BX
+ 008F  FE CB		     8	    DEC BL
+ 0091  B3 00		     9	    MOV BL,8-1-1-1-1-1-1-1-1
+ 0093  80 FB 00		     9	    CMP BL,0
+ 0096  74 09		     9	    JE ??0008
+ 0098  80 FB 01		     9	    CMP BL,1
+ 009B  74 04		     9	    JE ??0008
+ 009D  F7 E3		     9	    MUL BX
+ 009F  FE CB		     9	    DEC BL
+ 00A1			     9	??0008:    
+ 00A1			     8	??0007:    
+ 00A1			     7	??0006:    
+ 00A1			     6	??0005:    
+ 00A1			     5	??0004:    
+ 00A1			     4	??0003:    
+ 00A1			     3	??0002:    
+ 00A1			     2	??0001:    
+ 00A1			     1	??0000:    
+				    ;MOV DL,AL
+				    ;ADD DL,30H
+				    ;MOV AH,2
+				    ;INT 21H
+				    
+				    ;MOV EAX,1111FFFEH
+				    ;ADD EAX,1
+				    ;MOV EBX,EAX
+				    ;MOV EAX,EBX
+				    ;DEC EAX
+				    
+ 00A1  BA 000A			    MOV DX,10
+ 00A4  52			    PUSH DX
+ 00A5  BA 0000			    MOV DX,0
+				    ;;;;
+ 00A8				PUSH_AGAIN:
+
+ 00A8  B9 000A			    MOV CX,10
+ 00AB  F7 F1			    DIV CX
+ 00AD  8B DA			    MOV BX,DX
+ 00AF  53			    PUSH BX
+ 00B0  83 F8 00			    CMP AX,0
+ 00B3  74 05			    JE POP_AGAIN
+ 00B5  BA 0000			    MOV DX,0
+ 00B8  EB EE			    JMP PUSH_AGAIN
+				    
+ 00BA				POP_AGAIN:
+				    
+ 00BA  5A			    POP DX
+ 00BB  83 FA 0A			    CMP DX,10
+ 00BE  74 09			    JE  END_OUT
+ 00C0  83 C2 30			    ADD DX,30H
+ 00C3  B4 02			    MOV AH,2
+ 00C5  CD 21			    INT 21H
+				    ;;
+				    ;MOV AH,1
+				    ;INT 21H
+				    ;;
+ 00C7  EB F1			    JMP POP_AGAIN
+				    
+ 00C9				END_OUT: 
+				    ;MOV AH,1
+				    ;INT 21H   
+ 00C9  B4 4C			    MOV AH,4CH
+ 00CB  CD 21			    INT 21H
+				    
+ 00CD				CODES ENDS
+				    END START
+
+Microsoft (R) Macro Assembler Version 6.11		    05/24/19 01:13:44
+tempfile.asm						     Symbols 2 - 1
+
+
+
+
+Macros:
+
+                N a m e                 Type
+
+NJIE . . . . . . . . . . . . . .	Proc
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+CODES  . . . . . . . . . . . . .	16 Bit	 00CD	  Para	  Private 
+DATAS  . . . . . . . . . . . . .	16 Bit	 0000	  Para	  Private 
+STACKS . . . . . . . . . . . . .	16 Bit	 0000	  Para	  Private 
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+??0000 . . . . . . . . . . . . .	L Near	 00A1	  CODES	
+??0001 . . . . . . . . . . . . .	L Near	 00A1	  CODES	
+??0002 . . . . . . . . . . . . .	L Near	 00A1	  CODES	
+??0003 . . . . . . . . . . . . .	L Near	 00A1	  CODES	
+??0004 . . . . . . . . . . . . .	L Near	 00A1	  CODES	
+??0005 . . . . . . . . . . . . .	L Near	 00A1	  CODES	
+??0006 . . . . . . . . . . . . .	L Near	 00A1	  CODES	
+??0007 . . . . . . . . . . . . .	L Near	 00A1	  CODES	
+??0008 . . . . . . . . . . . . .	L Near	 00A1	  CODES	
+END_OUT  . . . . . . . . . . . .	L Near	 00C9	  CODES	
+POP_AGAIN  . . . . . . . . . . .	L Near	 00BA	  CODES	
+PUSH_AGAIN . . . . . . . . . . .	L Near	 00A8	  CODES	
+START  . . . . . . . . . . . . .	L Near	 0000	  CODES	
+
+	   0 Warnings
+	   0 Errors
