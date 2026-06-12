@@ -1,0 +1,3 @@
+>> load flujet
+>> image(X)
+>> colormap(jet)
