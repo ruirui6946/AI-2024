@@ -1,0 +1,13 @@
+x = input('Enter the value of x: ');
+y = input('Enter the value of y: ');
+r = sqrt(x^2+y^2);
+if x >= 0
+theta = atan(y/x);
+else
+theta = atan(y/x) + pi;
+end
+disp('The hypoteneuse is: ')
+disp(r)
+theta = theta*(180/pi);
+disp('The angle is degrees is:')
+disp(theta)
