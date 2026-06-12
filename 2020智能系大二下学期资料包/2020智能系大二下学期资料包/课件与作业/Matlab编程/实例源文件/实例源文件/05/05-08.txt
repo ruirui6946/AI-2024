@@ -1,0 +1,3 @@
+>> str=['Tsinghua University Press']
+>> isspace(str)
+>> isletter(str)
