@@ -1,0 +1,5 @@
+>> finverse(1/tan(x))
+>> syms u v
+>> finverse(exp(u-2*v),v)
+>> finverse(exp(u-2*v),u)
+
