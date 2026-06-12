@@ -1,0 +1,6 @@
+>> realmin('single')
+>> realmax('single')
+>> eps('single')
+>> realmin('double')
+>> realmax('double')
+>> eps('double')
