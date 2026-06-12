@@ -1,0 +1,3 @@
+>> A = [2 5; 1 7];
+>> B = [1 3]'; % makes a column vector
+>> [A B]
