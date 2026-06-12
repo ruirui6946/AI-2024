@@ -1,0 +1,3 @@
+>> str='Command Window'
+>> str1='The 'MATLAB Help'is a good reference for using Matlab'
+>> str1='The ''MATLAB Help''is a good reference for using Matlab'
