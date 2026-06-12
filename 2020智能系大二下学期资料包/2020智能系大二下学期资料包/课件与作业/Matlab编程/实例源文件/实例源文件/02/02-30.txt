@@ -1,0 +1,4 @@
+>> d = '01-Mar-2012'
+>> datestr(d)
+>> datestr(d, 2)
+>> datestr(d, 17)
