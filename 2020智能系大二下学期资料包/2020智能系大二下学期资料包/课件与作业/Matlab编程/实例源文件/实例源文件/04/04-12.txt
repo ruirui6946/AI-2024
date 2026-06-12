@@ -1,0 +1,3 @@
+>> fh = @humps;
+>> subplot(1,2,1),fplot(fh,[-3,3]);
+>> subplot(1,2,2),fplot(fh,[-3,3,-10,30]);
