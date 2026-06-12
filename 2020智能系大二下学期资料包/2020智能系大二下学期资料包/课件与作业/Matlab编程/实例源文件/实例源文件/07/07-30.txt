@@ -1,0 +1,8 @@
+>> syms x y
+>> f1=sin(x);
+>> f1d=diff(sin(x))
+>> f2=y*sin(x)+x*cos(y);
+>> f2d=diff(f2)
+>> f2d=diff(f2,y)
+>> f3=exp(x^2);
+>> f3d3=diff(f3,3)
