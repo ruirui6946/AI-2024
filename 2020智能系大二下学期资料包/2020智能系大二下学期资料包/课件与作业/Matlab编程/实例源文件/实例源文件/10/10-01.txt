@@ -1,0 +1,3 @@
+function pushbutton1_Callback(hObject, eventdata, handles)
+display Goodbye
+delete(handles.figure1);
