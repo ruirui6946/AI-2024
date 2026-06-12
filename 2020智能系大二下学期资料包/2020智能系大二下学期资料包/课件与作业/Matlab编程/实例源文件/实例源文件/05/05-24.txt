@@ -1,0 +1,5 @@
+>> person=struct('name',{'liuhuiying','zhangqiang'},'height',{162,175},'weight',{51,65},'hobby',
+{'swimming','Game'})
+>> person(1)
+>> person(2)
+
