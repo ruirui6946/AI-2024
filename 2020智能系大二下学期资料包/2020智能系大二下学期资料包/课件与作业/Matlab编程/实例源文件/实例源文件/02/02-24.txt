@@ -1,0 +1,5 @@
+>> A=round(rand(1,10)*10)
+>> B=ones(1,10)+2
+>> R_Comp1=A>B
+>> R_Comp2=A>5
+>> R_Comp3=A==7
