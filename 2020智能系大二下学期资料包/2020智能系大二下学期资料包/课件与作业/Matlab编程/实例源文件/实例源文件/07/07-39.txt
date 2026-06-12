@@ -1,0 +1,11 @@
+>> syms x y z t u;
+>> f = 1/(1 + x^2);
+>> g = sin(y);
+>> h = x^t; 
+>> p = exp(-y/u);
+>> compose(f,g)
+>> compose(f,g,t)
+>> compose(h,g,x,z)
+>> compose(h,g,t,z)			%指定 h 的自变量为 t，与上面的语句结果不同
+>> compose(h,p,x,y,z)
+>> compose(h,p,t,u,z)
