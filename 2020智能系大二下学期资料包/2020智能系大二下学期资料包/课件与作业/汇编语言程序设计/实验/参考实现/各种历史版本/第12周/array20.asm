@@ -1,0 +1,86 @@
+DATAS SEGMENT
+    DATA DB 01H,02H,03H,04H,05H
+         DB 06H,07H,08H,09H,0AH
+         DB 0BH,0CH,0DH,0EH,0FH
+         DB 10H,11H,12H,13H,70  
+DATAS ENDS
+
+STACKS SEGMENT
+    ;此处输入堆栈段代码
+STACKS ENDS
+
+CODES SEGMENT
+    ASSUME CS:CODES,DS:DATAS,SS:STACKS
+START:
+ARRAY20 MACRO ARRAY
+    
+    MOV CH,20
+    MOV AX,0
+    MOV DI,0
+AGAIN:
+    CMP DI,20
+    JE ENDD
+    
+    MOV BL,BYTE PTR ARRAY[DI]
+    MOV BH,0
+    ADD AX,BX
+    INC DI
+    JMP AGAIN
+ENDD:
+    DIV CH
+    ENDM
+    ;;;;
+    MOV AX,DATAS
+    MOV DS,AX
+    
+    ARRAY20 DATA
+    MOV AH,0
+    CALL PRINT10
+    
+    
+    MOV AH,4CH
+    INT 21H
+    ;;;;
+    
+PRINT10 PROC
+    PUSH DX
+    PUSH AX
+    
+    MOV DX,10
+    PUSH DX
+    
+PUSH_AGAIN:
+
+    MOV DL,10
+    DIV DL
+    MOV DL,AH
+    MOV DH,0
+    PUSH DX
+    CMP AL,0
+    JE POP_AGAIN
+    MOV AH,0
+    JMP PUSH_AGAIN
+    
+POP_AGAIN:
+    
+    POP DX
+    CMP DX,10
+    JE PRINT_END
+    ADD DX,30H
+    MOV AH,2
+    INT 21H
+    JMP POP_AGAIN
+        
+    
+PRINT_END:    
+    
+    MOV DL,' '
+    MOV AH,2
+    INT 21H
+    
+    POP AX
+    POP DX
+    RET
+ENDP
+CODES ENDS
+    END START
