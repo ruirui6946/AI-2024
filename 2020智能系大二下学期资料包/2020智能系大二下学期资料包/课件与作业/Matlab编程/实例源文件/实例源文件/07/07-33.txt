@@ -1,0 +1,4 @@
+>> syms x k
+>> symsum(1/x^k,k,0,2) 
+>> symsum(x^2)
+
