@@ -1,0 +1,5 @@
+>> sym(2)/sym(5)
+>> 2/5 + 1/3
+>> sym(2)/sym(5) + sym(1)/sym(3)
+>> double(sym(2)/sym(5) + sym(1)/sym(3))
+
