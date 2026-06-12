@@ -1,0 +1,10 @@
+>> syms x y u v w
+>> f = exp(-x^2);
+>> F= fourier(f)
+>> g = exp(-abs(w));
+>> G=fourier(g)
+>> f1 = x*exp(-abs(x));
+>> F1=fourier(f1,u)
+>> syms x real
+>> f2 = exp(-x^2*abs(v))*sin(v)/v;
+>> F2 = fourier(f,v,u)
