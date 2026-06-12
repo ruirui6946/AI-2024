@@ -1,0 +1,4 @@
+>> a=1;b=2;c=sqrt(3);
+>> cos_alpha = (a^2 + b^2 -c^2) / (2*a*b)
+>> alpha=acos(cos_alpha)
+>> alpha=alpha*180/pi
