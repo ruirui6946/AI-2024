@@ -1,0 +1,4 @@
+>> syms x y t
+>> x=t*cos(t);
+>> y=t*sin(t);
+>> ezplot(x,y)
