@@ -1,0 +1,4 @@
+>> A = magic(3)
+>> B = round(rand(3)*10)
+>> C1=A*B
+>> C2=A.*B
