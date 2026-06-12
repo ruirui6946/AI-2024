@@ -1,0 +1,72 @@
+DATAS SEGMENT
+    DATA DB '1234'
+         DB '5678'
+         ORG 100H  
+DATAS ENDS
+
+STACKS SEGMENT
+    DW 128 DUP(?)
+    DDDD EQU $
+STACKS ENDS
+
+CODES SEGMENT
+    ASSUME CS:CODES,DS:DATAS,SS:STACKS
+START:
+    MOV AX,DATAS
+    MOV DS,AX
+    
+    MOV AX,STACKS
+    MOV SS,AX
+    
+    MOV AX,[BX]
+    
+    MOV SP,DDDD 
+    
+    MOV AX,MYL
+    
+    MOV BX,10
+    JMP NEAR PTR MYL
+    
+    MYL:
+    
+    MOV BX,0
+    JMP WORD PTR [BX]
+    
+    MOV AL,1101100B
+    SHL AL,1
+    SAR AL,1
+    
+    MOV AL,0FFH
+    ROL AL,1
+    
+    MOV AL,11001100B
+    SHL AL,1
+    
+    MOV AX,CODE2
+    ;MOV ES,AX
+    ;MOV CS,AX
+    ;ASSUME CS:CODE2
+    
+    ;JMP FWORD PTR LL1
+    LL0:
+    
+    MOV DL,'0'
+    MOV AH,2
+    INT 21H
+    
+    ;MOV AH,4CH
+    ;INT 21H
+CODES ENDS
+
+CODE2 SEGMENT
+    LL1:
+    ADD AX,1
+    MOV DL,'0'
+    MOV AH,2
+    INT 21H
+    
+    MOV AH,4CH
+    INT 21H
+    ;END START
+CODE2 ENDS
+    END START
