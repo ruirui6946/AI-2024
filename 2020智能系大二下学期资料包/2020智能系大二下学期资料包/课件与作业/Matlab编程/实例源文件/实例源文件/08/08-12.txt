@@ -1,0 +1,9 @@
+% bar and barh
+A=ceil(rand(5,3)*10);
+x=[1,3,6,7,5];
+subplot(2,3,1),bar(A),title('bar');
+subplot(2,3,2),bar(x,A),title('specify the x label');
+subplot(2,3,3),bar(A,1.5),title('width=1.5');
+subplot(2,3,4),bar(A,'stacked'),title('stacked');
+subplot(2,3,5),barh(A),title('barh: default');
+subplot(2,3,6),barh(A,'stacked'),title('barh: stacked');
