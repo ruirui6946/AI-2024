@@ -1,0 +1,7 @@
+>> x=-2:0.2:2;
+>> y=x.^2;
+>> plot(x,y)
+>> str1 = num2str(min(x));
+>> str2 = num2str(max(x));
+>> out = ['Value of f from ' str1 ' to ' str2];
+>> xlabel(out); 
