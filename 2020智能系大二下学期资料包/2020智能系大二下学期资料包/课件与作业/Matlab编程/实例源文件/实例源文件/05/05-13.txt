@@ -1,0 +1,3 @@
+>> str=['MATLAB 2012a'];
+>> abs_of_str=abs(str)
+>> double_of_str=double(str)
