@@ -1,0 +1,13 @@
+>> clear
+>> A = magic(3);
+>> B = rand(3);
+>> save
+>> clear
+>> load('matlab.mat')
+>> A
+>> B
+>> clear
+>> open('matlab.mat')
+>> struc1=ans;
+>> struc1.A
+>> struc1.B
