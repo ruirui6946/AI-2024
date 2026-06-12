@@ -1,0 +1,6 @@
+>> name = ['Thomas R. Lee';'Senior Developer']
+>> name = char('Thomas R. Lee','Senior Developer')
+>> trimname = deblank(name(1,:))
+>> size(trimname)
+>> trimname1 = name(1,:)
+>> size(trimname1)
