@@ -1,0 +1,4 @@
+>> for n = 1:3
+      magic_str = ['M', int2str(n),' = magic(n)'];
+      eval(magic_str)
+end
