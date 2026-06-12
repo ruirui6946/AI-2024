@@ -1,0 +1,5 @@
+>> x=solve('a*x^2 + b*x + c')
+>> syms u v x y
+>> S = solve(x+2*y-u, 4*x+5*y-v)
+>> S.x
+>> S.y
