@@ -1,0 +1,19 @@
+>> f=sym('(x^2-1)*(x-2)*(x-3)');
+>> collect(f)
+ans =
+x^4 - 5*x^3 + 5*x^2 + 5*x - 6
+>> horner(f)
+ans =
+x*(x*(x*(x - 5) + 5) + 5) - 6
+>> factor(f)
+ans =
+(x - 1)*(x + 1)*(x - 2)*(x - 3)
+>> expand(f)
+ans =
+x^4 - 5*x^3 + 5*x^2 + 5*x - 6
+>> simplify(sym('log(2*x/y)'))
+ans =
+log((2*x)/y)
+>> simplify(sym('(-a^2+1)/(1-a)'))
+ans =
+a + 1
