@@ -1,0 +1,4 @@
+>> str=['qinghua university'
+'peiking university']
+>> str=['qh university'
+'peiking university']
