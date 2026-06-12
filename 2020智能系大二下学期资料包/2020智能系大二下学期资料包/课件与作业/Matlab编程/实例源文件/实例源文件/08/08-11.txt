@@ -1,0 +1,13 @@
+>> clear
+>> X = -1:0.1:1;
+>> Y=X';
+>> X1=X.^2;
+>> Y1=Y.^2;
+>> x=ones(3,1);
+>> x=ones(length(X),1);
+>> y=ones(1,length(Y));
+>> X1=x*X1;
+>> Y1=Y1*y;
+>> Z=X1+Y1;
+>> subplot(1,2,1),mesh(X,Y,Z);
+>> subplot(1,2,2),surf(X,Y,Z);
