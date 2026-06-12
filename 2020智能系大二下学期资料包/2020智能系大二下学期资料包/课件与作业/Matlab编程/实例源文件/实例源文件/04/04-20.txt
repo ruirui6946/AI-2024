@@ -1,0 +1,16 @@
+% find the minimum of the function f(x)=x^3+a*x^2+b*x+c
+function [x0,y] = funmin(a,b,c,x1,x2)
+options = optimset('Display','off');
+[x0,y] = fminbnd(@poly3,x1,x2,options);
+    function y=poly3(x)        %the nested function
+        y=x^3+a*x^2+b*x+c;
+    end
+% plot the function
+fplot(@poly3,[x1,x2]);
+hold on;
+plot(x0,y,'.');
+end
+
+
+>> [x,y]=funmin(-1000,10,0,600,800)
+
