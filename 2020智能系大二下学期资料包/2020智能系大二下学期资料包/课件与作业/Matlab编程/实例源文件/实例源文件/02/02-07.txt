@@ -1,0 +1,1 @@
+>> A = magic(3)             % create a 3*3 magic matrix
