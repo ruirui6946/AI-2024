@@ -1,0 +1,77 @@
+DATAS SEGMENT
+      
+DATAS ENDS
+
+STACKS SEGMENT
+    ;此处输入堆栈段代码
+STACKS ENDS
+
+CODES SEGMENT
+    ASSUME CS:CODES,DS:DATAS,SS:STACKS
+START:
+    MOV AX,DATAS
+    MOV DS,AX
+    
+    MOV DH,4
+  
+    MOV BH,'A'
+    MOV BL,'B'
+    MOV CL,'C'
+    CALL HANNO
+    
+    MOV AH,4CH
+    INT 21H
+HANNO PROC
+    PUSHA
+    CMP DH,1
+    JE ENDD1
+    
+    DEC DH
+    XCHG BL,CL
+
+    CALL HANNO
+    
+    XCHG BL,CL
+    JMP PRINT
+    
+MOVE2:
+
+    XCHG BH,CL
+    
+    CALL HANNO
+
+    JMP ENDD
+    
+PRINT:
+    MOV DL,BH 
+    MOV AH,2
+    INT 21H
+    MOV DL,'-'
+    INT 21H
+    MOV DL,'>'
+    INT 21H
+    MOV DL,BL
+    INT 21H
+    MOV DL,' '
+    INT 21H
+    JMP MOVE2
+    
+ENDD1:
+    MOV DL,BH 
+    MOV AH,2
+    INT 21H
+    MOV DL,'-'
+    INT 21H
+    MOV DL,'>'
+    INT 21H
+    MOV DL,BL
+    INT 21H
+    MOV DL,' '
+    INT 21H
+ENDD:
+
+    POPA
+    RET
+HANNO ENDP
+CODES ENDS
+    END START
