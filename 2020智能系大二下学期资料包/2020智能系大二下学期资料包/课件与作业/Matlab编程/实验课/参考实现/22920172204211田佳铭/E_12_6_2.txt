@@ -1,0 +1,8 @@
+>> t=0:pi/50:10*pi;
+>> plot3(sin(t),cos(t),t)
+>> title('Helix'),xlabel('sint(t)'),ylabel('cos(t)'),zlabel('t')
+>> text(0,0,0,'Origin')
+>> grid
+>> v=axis
+v =
+    -1     1    -1     1     0    40
