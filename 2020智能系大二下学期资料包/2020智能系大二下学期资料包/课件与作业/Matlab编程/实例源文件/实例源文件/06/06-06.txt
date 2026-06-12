@@ -1,0 +1,10 @@
+total = 0;
+k = 0;
+while total < 2e+4
+k = k+1;
+total = 10*k^2 - 4*k + 2 + total;
+end
+disp('The number of terms is:')
+disp(k)
+disp('The sum is:')
+disp(total)
