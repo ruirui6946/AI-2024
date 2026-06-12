@@ -1,0 +1,6 @@
+>> S=sym('x^2*y+x^2+2*x*y+x+x*y^2+y^2+y')
+>> S1=collect(S)
+>> S2=collect(S,y)
+>> pretty(S1)
+>> pretty(S2)
+
