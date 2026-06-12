@@ -1,0 +1,2 @@
+>> syms x y
+>> ezplot(x^2-y^4)
