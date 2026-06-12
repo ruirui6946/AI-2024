@@ -1,0 +1,10 @@
+a = input('Enter the value of side a: ');
+b = input('Enter the value of side b: ');
+c = input('Enter the value of side c: ');
+p = a + b + c;
+s = p/2;
+A = sqrt(s*(s-a)*(s-b)*(s-c));
+disp('The perimeter is: ')
+p
+disp('The area is:')
+A
