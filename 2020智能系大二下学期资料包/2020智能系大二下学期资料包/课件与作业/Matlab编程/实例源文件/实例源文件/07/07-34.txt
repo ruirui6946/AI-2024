@@ -1,0 +1,9 @@
+>> syms x
+>> g = exp(x*sin(x))
+>> g = exp(x*sin(x));
+>> t = taylor(g, x, 2, 'Order', 12);
+>> xd = 1:0.05:3; yd = subs(g,x,xd);
+>> ezplot(t, [1,3]); hold on;
+>> plot(xd, yd, '-.')
+>> title('Taylor approximation vs. actual function');
+>> legend('Taylor','Function')
