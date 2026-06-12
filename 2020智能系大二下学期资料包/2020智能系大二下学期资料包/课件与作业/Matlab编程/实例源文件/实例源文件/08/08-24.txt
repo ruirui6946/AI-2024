@@ -1,0 +1,1 @@
+>> gtext({'sin(x)=cos(x)';'sin(x)=cos(x)'});
