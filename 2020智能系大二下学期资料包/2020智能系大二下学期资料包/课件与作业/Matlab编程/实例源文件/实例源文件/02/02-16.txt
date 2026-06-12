@@ -1,0 +1,2 @@
+>> x = [true, true, false, true, false]
+>> class(x)
