@@ -1,0 +1,2 @@
+>> figure,plot(peaks)
+>> set(gca,'Color','b')
