@@ -1,0 +1,5 @@
+>> syms x y;
+>> f=(x+y)^3;
+>> expand(f)
+>> expand(sin(x+y))
+>> expand(exp(x+y))
