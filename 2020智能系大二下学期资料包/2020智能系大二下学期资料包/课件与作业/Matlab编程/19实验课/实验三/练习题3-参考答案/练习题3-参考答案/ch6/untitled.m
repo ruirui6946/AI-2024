@@ -1,0 +1,1 @@
+fplot(@(n)[log(n^2),log(2^n)])
