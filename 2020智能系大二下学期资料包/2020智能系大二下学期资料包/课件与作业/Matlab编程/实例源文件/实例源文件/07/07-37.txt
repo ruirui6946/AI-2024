@@ -1,0 +1,7 @@
+>> dsolve('Dx = -a*x')
+>> dsolve('Dx = cos(t)')
+>> dsolve('D2x = cos(t)')
+>> dsolve('(Dy)^2 + y^2 = 1','s') 
+>> dsolve('Dy = a*y', 'y(0) = b')
+>> dsolve('D2y = -a^2*y', 'y(0) = 1', 'Dy(pi/a) = 0')
+>> y = dsolve('(Dy)^2 + y^2 = 1','y(0) = 0')
