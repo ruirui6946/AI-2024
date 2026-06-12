@@ -1,0 +1,3 @@
+>> syms x h
+>> limit(sin(x)/x)
+>> limit((sin(x+h)-sin(x))/h,h,0)
