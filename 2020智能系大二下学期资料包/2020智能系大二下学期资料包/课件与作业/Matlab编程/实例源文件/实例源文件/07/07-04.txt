@@ -1,0 +1,4 @@
+>> syms a b
+>> f=a+b
+>> syms x y 5
+>> syms x y f1
