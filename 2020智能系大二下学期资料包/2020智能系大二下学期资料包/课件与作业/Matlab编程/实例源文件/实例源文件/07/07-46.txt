@@ -1,0 +1,7 @@
+>> syms z n a k
+>> f = 2*z/(z-2)^2;
+>> iztrans(f)
+>> g = n*(n+1)/(n^2+2*n+1);
+>> iztrans(g)
+>> f = z/(z-a);
+>> iztrans(f,k)
