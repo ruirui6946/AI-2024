@@ -1,0 +1,20 @@
+第一种方法。
+
+x = [1.92,0.05,-2.43,-0.02,0.09,0.85,-0.06];
+y = [];z = [];
+for k = 1:length(x)
+if abs(x(k)) >= 0.1
+y = [y,x(k)];
+else
+z = [z,x(k)];
+end
+end
+xnew = [y,zeros(size(z))]
+
+
+第二种方法。
+
+x = [1.92,0.05,-2.43,-0.02,0.09,0.85,-0.06];
+y = x(find(abs(x) >= 0.1));
+z = zeros(size(find(abs(x)<0.1)));
+xnew = [y,z]
