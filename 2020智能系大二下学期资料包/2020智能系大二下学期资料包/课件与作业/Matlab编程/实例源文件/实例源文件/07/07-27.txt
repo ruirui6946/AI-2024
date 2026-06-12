@@ -1,0 +1,4 @@
+>> syms x y
+>> f = y/(1 + x^2 + y^2);
+>> subplot(1,2,1),ezmeshc(f,[-5,5,-2*pi,2*pi],30),title('mesh');
+>> subplot(1,2,2),ezsurfc(f,[-5,5,-2*pi,2*pi],30),title('surf');
