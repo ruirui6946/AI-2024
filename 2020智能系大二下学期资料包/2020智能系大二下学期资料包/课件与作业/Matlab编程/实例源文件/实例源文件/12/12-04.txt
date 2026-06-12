@@ -1,0 +1,8 @@
+% the example of functions csvread and csvwrite
+I_MATLAB= imread('D:\matlab.jpg');      % read in the image
+I_MATLAB= rgb2gray(I_MATLAB);           % convert the image to gray image
+figure,imshow(I_MATLAB,'InitialMagnification',100); % show the image
+csvwrite('D:\matlab.txt',I_MATLAB);             % write the data into a text file
+sub_MATLAB= csvread('D:\matlab.txt',100,100);% read in part of the data
+sub_MATLAB= uint8(sub_MATLAB);         % convert the data to uint8
+figure,imshow(sub_MATLAB,'InitialMagnification',100);      % show the new image
