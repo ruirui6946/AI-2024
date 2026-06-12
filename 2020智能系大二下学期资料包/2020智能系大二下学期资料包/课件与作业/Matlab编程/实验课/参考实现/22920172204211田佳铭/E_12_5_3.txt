@@ -1,0 +1,8 @@
+>> f=sym('1/(1+x^2)');
+>> g=sym('sin(x)');
+>> compose(f,g)
+ans =
+1/(sin(x)^2 + 1)
+>> compose(g,f)
+ans =
+sin(1/(x^2 + 1))
