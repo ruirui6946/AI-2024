@@ -1,0 +1,20 @@
+>> syms x a t h n
+>> L1=limit((cos(x)-1)/x)
+L1 =
+0
+>> L2=limit(1/x^2,x,0,'right')
+L2 =
+Inf
+>> L3=limit(1/x,x,0,'left')
+L3 =
+-Inf
+>> L4=limit((log(x+h)-log(x))/h,h,0)
+L4 =
+1/x
+>> v=[(1+a/x)^x,exp(-x)];
+>> L5=limit(v,x,inf,'left')
+L5 =
+[ exp(a), 0]
+>> L6=limit((1+2/n)^(3*n),n,inf)
+L6 =
+exp(6)
