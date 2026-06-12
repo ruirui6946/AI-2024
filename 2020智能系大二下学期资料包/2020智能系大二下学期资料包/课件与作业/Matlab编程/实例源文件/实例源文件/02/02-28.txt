@@ -1,0 +1,8 @@
+>> A = [1 2 3 6];
+>> B = [1 2 3 4 6 10 20];
+>> [c, ia, ib] = intersect(A, B)
+>> A = magic(5);
+>> B = magic(4);
+>> [c, i] = setdiff(A(:), B(:));
+>> c'
+>> i'
