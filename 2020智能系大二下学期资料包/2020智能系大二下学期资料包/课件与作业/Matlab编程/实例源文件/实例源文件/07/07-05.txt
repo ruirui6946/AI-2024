@@ -1,0 +1,8 @@
+>> z=sym('x+i*y')
+>> expand(z^2)
+>> abs(z)
+>> clear
+>> syms x y real
+>> z=x+i*y
+>> abs(z)
+
