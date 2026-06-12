@@ -1,0 +1,18 @@
+>> phi=sym('(1+sqrt(5))/2');
+>> digits(5);
+>> vpa(phi)
+ans =
+1.618
+>> eval(phi)
+ans =
+    1.6180
+>> f=sym('2*x^2+x^3-3*x+5');
+>> n=sym2poly(f)
+n =
+     1     2    -3     5
+>> poly2sym(n)
+ans =
+x^3 + 2*x^2 - 3*x + 5
+>> poly2sym(n,'s')
+ans =
+s^3 + 2*s^2 - 3*s + 5
