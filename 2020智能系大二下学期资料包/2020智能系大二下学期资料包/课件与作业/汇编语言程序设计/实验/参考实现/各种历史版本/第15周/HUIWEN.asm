@@ -1,0 +1,83 @@
+DATAS SEGMENT
+    DATA1 DB 'ABCDCBA$'
+    DATA2 DB 'ABCDBA$'
+    DATA3 DB 'ABCCBA$'
+    DATA4 DB '$'      
+    
+    TEST1 DB 'asdfgfdsa$'
+    TEST2 DB 'ygvbhhbvgy$'
+    TEST3 DB 'ijnasdfugss$'
+    
+    OUT1 DB 'YES',0DH,0AH,'$'
+    OUT2 DB 'NO',0DH,0AH,'$' 
+DATAS ENDS
+
+STACKS SEGMENT
+    ;此处输入堆栈段代码
+STACKS ENDS
+
+CODES SEGMENT
+    ASSUME CS:CODES,DS:DATAS,SS:STACKS
+START:
+    MOV AX,DATAS
+    MOV DS,AX
+    
+    LEA BX,TEST1
+    CALL HUIWEN
+    
+    LEA BX,TEST2
+    CALL HUIWEN
+    
+    LEA BX,TEST3
+    CALL HUIWEN
+    
+    ;CALL HUIWEN
+    
+    MOV AH,4CH
+    INT 21H
+    
+HUIWEN PROC 
+    PUSH DX
+    PUSH AX
+    
+    MOV SI,0
+    MOV DI,0
+AGAIN:
+    CMP BYTE PTR [BX][SI],'$'
+    JE CHECK
+    INC SI
+    JMP AGAIN
+    
+CHECK:
+    DEC SI
+    
+CAGAIN:
+    CMP DI,SI
+    JAE CAN
+    MOV AL,BYTE PTR [BX][DI]
+    CMP AL,BYTE PTR [BX][SI]
+    JNE CANNOT 
+    
+    INC DI
+    DEC SI
+    JMP CAGAIN
+CAN:
+    LEA DX,OUT1
+    MOV AH,9
+    INT 21H
+    JMP ENDD
+    
+CANNOT:
+    LEA DX,OUT2
+    MOV AH,9
+    INT 21H
+
+ENDD:
+    POP AX
+    POP DX
+    RET    
+ENDP
+
+    
+CODES ENDS
+    END START
