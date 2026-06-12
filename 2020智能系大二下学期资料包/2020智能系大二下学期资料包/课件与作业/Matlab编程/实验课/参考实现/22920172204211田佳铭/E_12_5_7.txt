@@ -1,0 +1,14 @@
+>> sym_digits=sym('[1 2 3;a b c;sin(x) cos(x) tan(x)]')
+sym_digits =
+[      1,      2,      3]
+[      a,      b,      c]
+[ sin(x), cos(x), tan(x)]
+>> syms a b c
+>> M1=sym('Classical');
+>> M2=sym('Jazz');
+>> M3=sym('Blues');
+>> syms_matrix=[a b c;M1,M2,M3;sym('2'),sym('3'),sym('5')]
+syms_matrix =
+[         a,    b,     c]
+[ Classical, Jazz, Blues]
+[         2,    3,     5]
