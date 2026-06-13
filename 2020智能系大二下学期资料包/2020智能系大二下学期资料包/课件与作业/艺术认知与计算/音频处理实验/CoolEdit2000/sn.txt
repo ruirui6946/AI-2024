@@ -1,0 +1,6 @@
+安装完成后
+  运行ce2kreg.exe
+  然后输入注册号
+
+  Name: MFD Corp.
+  Serial: Q17EXF5U
