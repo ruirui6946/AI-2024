@@ -1,0 +1,197 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0050)http://www.cs.duke.edu/~anderson/110/building.html -->
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 10">
+<meta name=Originator content="Microsoft Word 10">
+<link rel=File-List href="building_files/filelist.xml">
+<title>Installing and Building Nachos</title>
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>Vijay Karamcheti</o:Author>
+  <o:LastAuthor>Vijay Karamcheti</o:LastAuthor>
+  <o:Revision>7</o:Revision>
+  <o:TotalTime>7</o:TotalTime>
+  <o:Created>2003-01-13T18:33:00Z</o:Created>
+  <o:LastSaved>2005-01-18T20:05:00Z</o:LastSaved>
+  <o:Pages>1</o:Pages>
+  <o:Words>264</o:Words>
+  <o:Characters>1508</o:Characters>
+  <o:Company>New York University</o:Company>
+  <o:Lines>12</o:Lines>
+  <o:Paragraphs>3</o:Paragraphs>
+  <o:CharactersWithSpaces>1769</o:CharactersWithSpaces>
+  <o:Version>10.6714</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:Zoom>75</w:Zoom>
+  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
+ </w:WordDocument>
+</xml><![endif]-->
+<style>
+<!--
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+h2
+	{mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-outline-level:2;
+	font-size:18.0pt;
+	font-family:"Times New Roman";
+	font-weight:bold;}
+h4
+	{mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-outline-level:4;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	font-weight:bold;}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+p
+	{mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+code
+	{font-family:"Courier New";
+	mso-ascii-font-family:"Courier New";
+	mso-fareast-font-family:"Times New Roman";
+	mso-hansi-font-family:"Courier New";
+	mso-bidi-font-family:"Courier New";}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+<!--[if gte mso 10]>
+<style>
+ /* Style Definitions */
+ table.MsoNormalTable
+	{mso-style-name:"Table Normal";
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	mso-style-noshow:yes;
+	mso-style-parent:"";
+	mso-padding-alt:0in 5.4pt 0in 5.4pt;
+	mso-para-margin:0in;
+	mso-para-margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";}
+</style>
+<![endif]--><!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext="edit" spidmax="5122"/>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext="edit">
+  <o:idmap v:ext="edit" data="1"/>
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body bgcolor=white lang=EN-US link=blue vlink=blue style='tab-interval:.5in'>
+
+<div class=Section1>
+
+<h2>Installing and Building Nachos</h2>
+
+<h4><i>On the ITS Solaris SPARC machine <br>
+</i><span style='font-weight:normal;mso-bidi-font-weight:bold'>(These
+instructions assume that you are using i5.nyu.edu)</span></h4>
+
+<p>Create a directory in which to unpack the code directory. I suggest V22.0202
+or v22.0202 in your home directory to make it easy for us to find. </p>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<p class=MsoNormal><code><span lang=ES-TRAD style='font-size:10.0pt;mso-ansi-language:
+ES-TRAD'>mkdir <i>dirname</i></span></code><span lang=ES-TRAD style='font-size:
+10.0pt;font-family:"Courier New";mso-ansi-language:ES-TRAD'><br>
+<code>cd <i>dirname</i></code><i><br>
+</i><code>tar xf /home1/v/vk18/OS/code-solaris.tar&nbsp;</code><br>
+<code>cd nachos-3.4/code</code><br>
+<code>make </code></span><span lang=ES-TRAD style='mso-ansi-language:ES-TRAD'><o:p></o:p></span></p>
+
+</blockquote>
+
+<p class=MsoNormal>Verify before you do any of the above that <b>GNU make</b> (<b>make</b>
+on i5.nyu.edu), and <b>gcc</b> are in your path, and that your <b>LD_LIBRARY_PATH
+</b>environment variable includes /usr/local/lib. Expect the first Nachos build
+to take a few minutes.&nbsp; </p>
+
+<h4><i>On a Linux/x86 machine:</i></h4>
+
+<p>Download the version of the Nachos source that has been customized for
+Linux/x86 (<b>code-linux.tar.gz</b>) from the <a href="nachos-resources.htm">Nachos
+Resources</a> page. Unpack this file into a directory on your machine:</p>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<p><code><span style='font-size:10.0pt'>mkdir <i>dirname</i></span></code><span
+style='font-size:10.0pt;font-family:"Courier New"'><br>
+<code>cd <i>dirname</i></code><i><br>
+</i><code>tar zxf &lt;path to downloaded code-linux.tar.gz&gt;</code><br>
+<code>cd nachos-3.4/code</code><br>
+<code>make</code></span></p>
+
+</blockquote>
+
+<p>You should end up with two subdirectories: <b>nachos-3.4</b> and <b>gnu-decstation-ultrix</b>.
+Please do not delete any of the files (or otherwise modify the structure) in
+the <b>gnu-decstation-ultrix</b> subdirectory. These files are required to
+allow you to compile user-level programs for Nachos, which rely on a MIPS
+cross-compiler (see the <a href="nachos-labs.pdf">Nachos Project Guide</a> for
+additional details).</p>
+
+<p>Verify before you do any of the above that <b>GNU make</b> (<b>make</b> on
+Linux), and <b>gcc</b> are in your path, and that your <b>LD_LIBRARY_PATH </b>environment
+variable includes /usr/local/lib. Expect the first Nachos build to take a few
+minutes.&nbsp;</p>
+
+<h2>Adding New Files to the Nachos build</h2>
+
+<p class=MsoNormal>Modify Makefile.common in the code directory, supplementing
+THREAD_*, USERPROG_*, ... lists. Use tabs, not spaces! Remember to do a 'make
+depend' in the threads directory. </p>
+
+<p><o:p>&nbsp;</o:p></p>
+
+</div>
+
+</body>
+
+</html>
