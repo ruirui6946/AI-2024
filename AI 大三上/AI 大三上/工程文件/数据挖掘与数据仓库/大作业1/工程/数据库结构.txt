@@ -1,0 +1,178 @@
+数据库名称：jingani
+
+jingani.Table:
+{
+    Table Admit 管理员
+	{
+	    Account  varchar(20) PK 账号
+        password varchar(20)    密码
+	}
+
+	Table check 审查
+	{
+	    ori_p_num    varchar(10) PK 原画编号
+	    Edit_name    varchar(20) PK 编辑姓名
+	    Source       varchar(30)    来源[京阿尼原创或者改编的原作品]
+	    Painter_name varchar(20)    画师姓名
+	    Status       varchar(10)    审核状态
+	    Quality      int            质量评级[仅当审核通过]
+	    pass_time    datetime       审核通过时间[仅当审核通过]
+	    instorige    bit(1)         是否已经入库[仅当审核通过]
+	}
+
+	Table editor 编辑
+	{
+	    Name       varchar(20) PK 姓名
+	    Sex        varchar(2)     性别
+	    max_edit   int            最大可承担原画张数
+	    now_edit   int            目前已承担原画张数
+	    queue_edit int            可预约数
+	    Level      int            级别
+	    password   varchar(20)    登录密码
+	}
+
+	Table ori_paint 入库原画
+	{
+	    Num          varchar(10) PK 原画编号
+	    Source       varchar(30)    来源[京阿尼原创或者改编的原作品]
+	    Painter_name varchar(20)    画师
+	    Style        varchar(20)    风格
+	    Quality      int            质量
+	}
+
+	Table painter 画师
+	{
+	    Name     varchar(20) PK 姓名
+	    Sex      varchar(2)     性别
+	    Style    varchar(20)    作画风格
+	    Level    int            作画水平
+	    password varchar(20)    登录密码
+	}
+
+	Table storage 入库
+	{
+	    paint_num  varchar(10) PK 原画编号
+	    edit_name  varchar(20) PK 编辑姓名
+	    store_time datetime       入库时间
+	}
+
+	Table tv_list 播放列表
+	{
+	    TV_name    varchar(50) PK 电视台名称
+	    Anime      varchar(50) PK 番名
+	    Source     varchar(30) PK 来源[京阿尼原创或者改编的原作品]
+	    Episode    int         PK 集数
+	    start_time datetime       播放开始时间
+	    end_time   datetime       播放结束时间
+	}
+
+	Table tv_station 电视台
+	{
+	    Name       varchar(50) PK 名称
+	    Local      varchar(20)    地区
+	    Credit     int            名誉值
+	    Value      int            播放估价
+	    Reputation int            知名度
+	    password   varchar(20)    登录密码
+	}
+
+	外键
+	{
+	     1.Check.Edit_name->Editor.Name
+	     2.Check.Painter_name->Painter.Name
+	     3.Storage.edit_name->Editor.Name
+	     4.Ori_paint.Num->Storage.paint_num
+	     5.TV_list.TV_name->TV_station.Name   
+	}
+}
+
+jingani.Relation:
+{
+    Realtion check 审查
+    {
+        Table check
+	    {
+	        ori_p_num    varchar(10) PK 
+	        Edit_name    varchar(20) PK 
+	        Source       varchar(30) 
+	        Painter_name varchar(20) 
+	        Status       varchar(10) 
+	        Quality      int
+	        pass_time    datetime 
+	        instorige    bit(1)
+	    }
+
+	    Table editor
+	    {
+	        Name       varchar(20) PK 
+	        Sex        varchar(2) 
+	        max_edit   int 
+	        now_edit   int 
+	        queue_edit int 
+	        Level      int 
+	        password   varchar(20)
+	    }
+
+    	Table painter
+	    {
+	    	Name     varchar(20) PK
+	    	Sex      varchar(2)
+	    	Style    varchar(20)
+	    	Level    int
+	    	password varchar(20)
+	    }
+    }
+
+    Relation storage 入库
+    {
+        Table ori_paint
+	    {
+	        Num          varchar(10) PK 
+	        Source       varchar(30) 
+	        Painter_name varchar(20) 
+	        Style        varchar(20) 
+	        Quality      int
+	    }
+
+	    Table editor
+	    {
+	    	Name       varchar(20) PK
+	    	Sex        varchar(2)
+	    	max_edit   int
+	    	now_edit   int
+	    	queue_edit int
+	    	Level      int
+	    	password   varchar(20)
+	    }
+
+	    Table storage
+	    {
+	    	paint_num  varchar(10) PK
+	    	edit_name  varchar(20) PK
+	    	store_time datetime
+	    }
+    }
+
+	Relation Play 播放
+	{
+	    Table tv_list
+		{
+		    TV_name    varchar(50) PK 
+		    Anime      varchar(50) PK 
+		    Source     varchar(30) PK 
+		    Episode    int         PK 
+		    start_time datetime 
+		    end_time   datetime
+		}
+
+		Table tv_station
+		{
+		    Name       varchar(50) PK 
+	 	    Local      varchar(20) 
+	  	    Credit     int
+	  	    Value      int 
+	 	    Reputation int 
+	 	    password   varchar(20)
+		}
+	}
+}
