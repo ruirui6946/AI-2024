@@ -1,0 +1,19 @@
+﻿JAVA_HOME要注意java有不同的版本，要找到其对应的安装路径，不能直接抄这条安装路径
+
+2.0以上版本的hbase需要将hbase-site.xml修改为如下形式。其中/home/hadoop/zk_data是zookeeper的数据目录路径。
+<property>
+                <name>hbase.rootdir</name>
+                <value>hdfs://localhost:9000/hbase</value>
+        </property>
+        <property>
+                <name>hbase.cluster.distributed</name>
+                <value>true</value>
+        </property>
+        <property>
+                <name>hbase.zookeeper.property.dataDir</name>
+                <value>/home/hadoop/zk_data</value>
+         </property>
+         <property>
+                 <name>hbase.wal.provider</name>
+                 <value>filesystem</value>
+             </property>
