@@ -1,0 +1,7 @@
+[14 0/14 1]
+| chest_pain = 0: [4 0/12 1]
+| | thalassemia = 0: [3 0/4 1]
+| | thalassemia = 1: [1 0/8 1]
+| chest_pain = 1: [10 0/2 1]
+| | thalassemia = 0: [7 0/0 1]
+| | thalassemia = 1: [3 0/2 1]
