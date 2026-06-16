@@ -1,0 +1,56 @@
+一、程序使用方法：
+在"Hall_Ticketing_System"目录下输入make命令即可以生成一个可执行文件main，main可以直接运行，不需要命令行参数。
+在"Hall_Ticketing_System"目录下输入make clean即可以移除此可执行文件，进行代码调整。
+
+二、配置说明：
+本系统可以调整一些参数来进行修改，也可以通过修改input.txt文件来改变输入。
+
+可以修改的一些变量：
+（1）./include/Aseat.h中的len_host代表可允许的最大客户名长度
+（2）./include/Lseat.h中seat_line_num常变量代表系统最大允许的每排座位数
+（3）./include/Hall.h中hall_line常变量代表系统最大允许的排数
+
+除此之外，一些变量的修改基本不影响程序功能，例如：
+（1）./include/Aseat.h中的sfree、ordered和sold值只要互不相同即可
+（2）./include/Aseat.h中的nohost主要设为一个非法的名字即可（不可超过len_host长度），例如最简单的做法就是开始字符为数字
+
+./input/input.txt为输入文件，格式为
+n // 音乐厅座位排数
+m // 每排座位数
+k // 代理个数
+rvt // 预约的有效期（单位分钟）
+agent 1
+reserve reserve_time (单位秒) 
+ticket ticket_time (单位秒) 
+cancel cancel_time (单位秒) 
+check_customer check_time (单位秒) 
+ : 
+有效的交易列表 
+ :
+end 
+ : 
+ : 
+ : 
+agent k 
+reserve reserve_time (单位秒) 
+ticket ticket_time (单位秒) 
+cancel cancel_time (单位秒) 
+check_customer check_time (单位秒) 
+ : 
+有效的交易列表 
+ : 
+end
+
+有效的交易如下：
+reserve <座位描述> name_of_customer // 为某客户预订指定座位的票 
+ticket <座位描述> name_of_customer // 为某客户购买指定座位的票 
+cancel <座位描述> name_of_customer // 为某客户取消指定座位的预订 
+show all name_of_customer // 显示某客户的预订或购票情况
+
+<座位描述>可以为：
+A 2 // 第 A 行，第 2 座 A 4 7 // 第 A 行，第 4 到 7 座 A // 第 A 行
+A 2r // 从第 A 行开始的 2 行
+A 2c // 第 A 行，2 个座位（不在意具体列）
+6 // 6 个座位（不在意具体行和列）
+
+**具体描述参照./document/2017 级《Linux 内核分析》课程项目描述与要求
