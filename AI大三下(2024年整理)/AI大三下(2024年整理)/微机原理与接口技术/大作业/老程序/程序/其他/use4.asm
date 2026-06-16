@@ -1,0 +1,94 @@
+DATAS SEGMENT
+     DATA1 DB 'HELLO WORLD'
+     DATA2 DB 'HELLO MYSELF'
+     DATA3 DB 20 DUP(01H)
+     DATA4 DB 20 DUP(01H) 
+DATAS ENDS
+
+STACKS SEGMENT
+    ;此处输入堆栈段代码
+STACKS ENDS
+
+CODES SEGMENT
+    ASSUME CS:CODES,DS:DATAS,SS:STACKS
+START:
+    MOV AX,DATAS
+    MOV DS,AX
+    
+    MOV AX,00110111B
+    XOR AX,AX
+    
+    MOV AX,DATAS
+    MOV ES,AX
+    
+    LEA SI,DATA1
+    LEA DI,DATA2
+    
+    ;MOV AL,00100000B
+    ;TEST AL,00100010B 
+    
+    MOV CX,10
+
+    REPE CMPSB
+    ;DS:SI->ES:DI
+    
+    LEA SI,DATA1
+    LEA DI,DATA4
+    MOV CX,10
+    REPE MOVSB
+    ;DS:SI->ES:DI
+    
+    MOV AX,0FFH
+    MOV CX,10
+    
+    LEA DI,DATA3
+    REP STOSB
+    ;DS:DI
+    
+    MOV AX,0FFFFH
+    SHL AX,1
+    SAL AX,1
+    
+    SHR AX,1
+    SAR AX,1
+    
+    ROL AX,1
+    ROR AX,1
+    RCL AX,1
+    RCR AX,1
+    
+    JCXZ ADDD
+
+ADDD:
+    INC AL 
+    
+    MOV CX,10
+    MOV AL,'W'
+    LEA DI,DATA1
+    REPNE SCASB
+    ;ES:DI
+    
+    MOV CX,10
+    LEA SI,DATA1
+    REPNE LODSB
+    ;DS:SI
+    
+    ;LDS
+    ;LES 
+    CLC
+    CLD
+    CLI
+    CMC
+    STC
+    STD
+    STI
+    
+    MOV BX,2H
+    MOV AX,2
+    
+    
+    
+    MOV AH,4CH
+    INT 21H
+CODES ENDS
+    END START

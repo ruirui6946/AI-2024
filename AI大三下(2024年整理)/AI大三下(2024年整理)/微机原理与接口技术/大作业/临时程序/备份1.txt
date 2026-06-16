@@ -1,0 +1,118 @@
+DSEG    SEGMENT
+;MESS    DB   8 DUP(?)
+;因为程序在emu8086中测试，不支持DUP(?)，测试时使用如下的写法
+MESS    DB  00H,00H,00H,00H,00H,00H,00H,00H
+P_8255A DW  300H,301H,302H,303H ;8255A通道地址 
+P_8253  DW  304H,305H,306H,307H ;8253通道地址
+P_8259A DW  308H,309H           ;8259A通道地址
+P_8251A DW  312H,313H           ;8251A通道地址
+INT_NUM DB  50H                 ;初始中断类型号
+DSEG    ENDS
+
+SSEG    SEGMENT PARA STACK 
+        DW  256 DUP(?)
+SSEG    ENDS
+
+CSEG    SEGMENT
+        ASSUME  CS:CSEG,DS:DSEG
+BEGIN:  MOV AX,DSEG
+        MOV DS,AX
+        
+    ;建立中断向量
+    ;这里不考虑键盘中断
+        ;后文中DS需要改变，所以先将中断号取出，放入BL
+        MOV AL,BYTE PTR INT_NUM
+        ADD AL,02H  ;IR2中断
+        MOV BL,AL
+        
+        ;建立IR2中断向量
+        PUSH DS
+        MOV AX,SEG WORK
+        MOV DS,AX
+        MOV AX,OFFSET WORK
+        MOV DX,AX
+        MOV AL,BL
+        MOV AH,25H
+        INT 21H
+        POP DS
+    
+    ;8255A初始化编程
+        ;A口编程为方式0
+        ;C口的高4位编程为输入，低4位为输出
+        MOV DX,WORD PTR P_8255A[6]  ;控制口地址
+        MOV AL,10011000B
+        OUT DX,AL
+        
+        
+    ;8253初始编程
+        ;8253初始化编程，通道0，方式3
+        ;先写低字节，后写高字节，BCD，时间常数8
+        ;使用CPU时钟：8MHz
+        ;用来给ADC0809提供时钟，时钟频率1MHz
+        MOV DX,WORD PTR P_8253[6]   ;控制口地址
+        MOV AL,00110111B
+        OUT DX,AL
+        MOV DX,WORD PTR P_8253[0]   ;通道0
+        MOV AX,0008H                ;时间常数8
+        OUT DX,AL                   ;低字节
+        MOV AL,AH
+        OUT DX,AL                   ;高字节
+        
+        ;8253初始化编程，通道1，方式3
+        ;先写低字节，后写高字节，BCD，时间常数52
+        ;使用CPU时钟：8MHz
+        ;用来给发送端8251A提供时钟，时钟频率0.1536MHz
+        MOV DX,WORD PTR P_8253[6]   ;控制口地址
+        MOV AL,01110111B
+        OUT DX,AL
+        MOV DX,WORD PTR P_8253[2]   ;通道1
+        MOV AX,0052H                ;时间常数52
+        OUT DX,AL                   ;低字节
+        MOV AL,AH
+        OUT DX,AL                   ;高字节
+        
+        ;8253初始化编程，通道2，方式2
+        ;先写低字节，后写高字节，BCD，时间常数1536
+        ;使用8253OUT1的时钟：0.1536MHz
+        ;用来给发送端8259A提供中断脉冲，频率100MHz
+        MOV DX,WORD PTR P_8253[6]   ;控制口地址
+        MOV AL,10110101B
+        OUT DX,AL
+        MOV DX,WORD PTR P_8253[4]   ;通道2
+        MOV AX,1536H                ;时间常数1536
+        OUT DX,AL                   ;低字节
+        MOV AL,AH
+        OUT DX,AL                   ;高字节
+    
+    ;8259A初始化编程
+        ;8259A初始化命令字
+        ;ICW1，单片8259A，边沿触发
+        MOV DX,WORD PTR P_8259A[0]
+        MOV AL,00010011B
+        OUT DX,AL
+        
+        ;ICW2,中断类型号INT_NUM-INT_NUM+7
+        MOV DX,WORD PTR P_8259A[2]
+        MOV AL,BYTE PTR INT_NUM
+        OUT DX,AL
+        
+        ;ICW4,全嵌套，普通EOI
+        MOV DX,WORD PTR P_8259A[2]
+        MOV AL,01H
+        OUT DX,AL
+        
+        ;OCW1,不屏蔽键盘中断（IR1）和使用到的IR2
+        MOV DX,WORD PTR P_8259A[2]
+        MOV AL,11111001B
+        OUT DX,AL
+        
+    ;8251A初始化编程
+        ;
+        
+WORK PROC FAR
+    MOV AX,01H
+    IRET
+WORK ENDP       
+        
+CSEG    ENDS
+        END  BEGIN

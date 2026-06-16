@@ -1,0 +1,121 @@
+Microsoft (R) Macro Assembler Version 6.11		    04/06/19 20:04:04
+tempfile.asm						     Page 1 - 1
+
+
+ 0000				DATAS SEGMENT
+ 0000 48 45 4C 4C 4F 20		     DATA1 DB 'HELLO WORLD'
+       57 4F 52 4C 44
+ 000B 48 45 4C 4C 4F 20		     DATA2 DB 'HELLO MYSELF'
+       4D 59 53 45 4C 46
+ 0017  0014 [			     DATA3 DB 20 DUP(01H)
+        01
+       ]
+ 002B  0014 [			     DATA4 DB 20 DUP(01H) 
+        01
+       ]
+ 003F				DATAS ENDS
+
+ 0000				STACKS SEGMENT
+				    ;此处输入堆栈段代码
+ 0000				STACKS ENDS
+
+ 0000				CODES SEGMENT
+				    ASSUME CS:CODES,DS:DATAS,SS:STACKS
+ 0000				START:
+ 0000  B8 ---- R		    MOV AX,DATAS
+ 0003  8E D8			    MOV DS,AX
+				    
+ 0005  B8 ---- R		    MOV AX,DATAS
+ 0008  8E C0			    MOV ES,AX
+				    
+ 000A  8D 36 0000 R		    LEA SI,DATA1
+ 000E  8D 3E 000B R		    LEA DI,DATA2
+				    
+				    ;MOV AL,00100000B
+				    ;TEST AL,00100010B 
+				    
+ 0012  B9 000A			    MOV CX,10
+
+ 0015  F3/ A6			    REPE CMPSB
+				    ;DS:SI->ES:DI
+				    
+ 0017  8D 36 0000 R		    LEA SI,DATA1
+ 001B  8D 3E 002B R		    LEA DI,DATA4
+ 001F  B9 000A			    MOV CX,10
+				    ;DS:SI->ES:DI
+				    
+ 0022  B8 00FF			    MOV AX,0FFH
+ 0025  B9 000A			    MOV CX,10
+				    
+ 0028  8D 3E 0017 R		    LEA DI,DATA3
+				    ;DS:DI
+				    
+ 002C  B8 FFFF			    MOV AX,0FFFFH
+ 002F  D1 E0			    SHL AX,1
+ 0031  D1 E0			    SAL AX,1
+				    
+ 0033  D1 E8			    SHR AX,1
+ 0035  D1 F8			    SAR AX,1
+				    
+ 0037  D1 C0			    ROL AX,1
+ 0039  D1 C8			    ROR AX,1
+ 003B  D1 D0			    RCL AX,1
+ 003D  D1 D8			    RCR AX,1
+				    
+ 003F  E3 00			    JCXZ ADDD
+
+ 0041				ADDD:
+ 0041  FE C0			    INC AL 
+				    
+ 0043  B9 000A			    MOV CX,10
+ 0046  B0 57			    MOV AL,'W'
+ 0048  8D 3E 0000 R		    LEA DI,DATA1
+ 004C  F2/ AE			    REPNE SCASB
+				    ;ES:DI
+				    
+ 004E  B9 000A			    MOV CX,10
+ 0051  8D 36 0000 R		    LEA SI,DATA1
+				    ;DS:SI
+				    
+				    ;LDS
+				    ;LES 
+ 0055  F8			    CLC
+ 0056  FC			    CLD
+ 0057  FA			    CLI
+ 0058  F5			    CMC
+ 0059  F9			    STC
+ 005A  FD			    STD
+ 005B  FB			    STI
+				    
+ 005C  B4 4C			    MOV AH,4CH
+ 005E  CD 21			    INT 21H
+ 0060				CODES ENDS
+				    END START
+Microsoft (R) Macro Assembler Version 6.11		    04/06/19 20:04:04
+tempfile.asm						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+CODES  . . . . . . . . . . . . .	16 Bit	 0060	  Para	  Private 
+DATAS  . . . . . . . . . . . . .	16 Bit	 003F	  Para	  Private 
+STACKS . . . . . . . . . . . . .	16 Bit	 0000	  Para	  Private 
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+ADDD . . . . . . . . . . . . . .	L Near	 0041	  CODES	
+DATA1  . . . . . . . . . . . . .	Byte	 0000	  DATAS	
+DATA2  . . . . . . . . . . . . .	Byte	 000B	  DATAS	
+DATA3  . . . . . . . . . . . . .	Byte	 0017	  DATAS	
+DATA4  . . . . . . . . . . . . .	Byte	 002B	  DATAS	
+START  . . . . . . . . . . . . .	L Near	 0000	  CODES	
+
+	   0 Warnings
+	   0 Errors

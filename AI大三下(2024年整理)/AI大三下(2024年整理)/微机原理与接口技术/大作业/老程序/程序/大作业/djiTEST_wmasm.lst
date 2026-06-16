@@ -1,0 +1,322 @@
+Microsoft (R) Macro Assembler Version 6.11		    05/03/19 09:57:36
+tempfile.asm						     Page 1 - 1
+
+
+ 0000				DATAS SEGMENT
+ 0000 41 42 43 44 45		    NODENAME DB 'ABCDE'
+ 0005 = 0005			    LEN1 EQU $-NODENAME
+				    
+ 0005 41			    STARTNODE DB 'A'
+ 0006 00			    STARTNUM DB 00H
+ 0007 45			    ENDNODE DB 'E'
+ 0008 00			    ENDNUM DB 00H
+				    
+				    ;CLOSED DB LEN1 DUP(00H)
+ 0009  0005 [			    CHECK DB LEN1 DUP(00H)
+        00
+       ]
+				    
+ 000E 00 04 07 01 08		    PATH DB 00H,04H,07H,01H,08H
+ 0013  04 00 FF FF 03		         DB 04H,00H,0FFH,0FFH,03H
+ 0018  07 FF 00 02 03		         DB 07H,0FFH,00H,02H,03H
+ 001D  01 FF 02 00 FF		         DB 01H,0FFH,02H,00H,0FFH
+ 0022  08 03 03 FF 00		         DB 08H,03H,03H,0FFH,00H
+				         
+ 0027  0005 [			    DIS DB LEN1 DUP(0FFH)
+        FF
+       ]
+ 002C  0005 [			    FATHER DB LEN1 DUP(0FFH)
+        FF
+       ]
+				    
+ 0031  0005 [			    OUTPATH DB LEN1 DUP(0FFH)
+        FF
+       ]
+				    
+ 0036 63 61 6E 6E 6F 74		    CANNOT DB 'cannot find a way',0DH,0AH,'$'
+       20 66 69 6E 64 20
+       61 20 77 61 79 0D
+       0A 24
+ 004A 66 69 6E 64 20 61		    MAKEIT DB 'find a way:',0DH,0AH,'$'
+       20 77 61 79 3A 0D
+       0A 24
+ 0058 0D 0A 63 6F 73 74		    COST DB 0DH,0AH,'cost:',0DH,0AH,'$' 
+       3A 0D 0A 24
+ 0062				DATAS ENDS
+
+ 0000				STACKS SEGMENT
+				    ;此处输入堆栈段代码
+ 0000				STACKS ENDS
+
+ 0000				CODES SEGMENT
+				    ASSUME CS:CODES,DS:DATAS,SS:STACKS
+ 0000				START:
+ 0000  B8 ---- R		    MOV AX,DATAS
+ 0003  8E D8			    MOV DS,AX
+				    
+				    ;MOV AL,LEN1
+				    ;得到初始节点标号
+ 0005  8A 0E 0005 R		    MOV CL,BYTE PTR STARTNODE
+ 0009  BB 0000			    MOV BX,0
+ 000C				FIND_S:
+ 000C  3A 8F 0000 R		    CMP CL,BYTE PTR NODENAME[BX]
+ 0010  74 03			    JE SET_S
+ 0012  43			    INC BX
+ 0013  EB F7			    JMP FIND_S
+
+ 0015				SET_S:
+ 0015  88 1E 0006 R		    MOV BYTE PTR STARTNUM,BL
+				    
+				    ;得到目标节点标号
+ 0019  8A 0E 0007 R		    MOV CL,BYTE PTR ENDNODE
+ 001D  BB 0000			    MOV BX,0
+ 0020				FIND_E:
+ 0020  3A 8F 0000 R		    CMP CL,BYTE PTR NODENAME[BX]
+ 0024  74 03			    JE SET_E
+ 0026  43			    INC BX
+ 0027  EB F7			    JMP FIND_E
+
+ 0029				SET_E:
+ 0029  88 1E 0008 R		    MOV BYTE PTR ENDNUM,BL
+				    
+				    ;寻找路径
+ 002D  8A 2E 0006 R		    MOV CH,BYTE PTR STARTNUM
+ 0031  8A 1E 0006 R		    MOV BL,BYTE PTR STARTNUM
+ 0035  B7 00			    MOV BH,0
+ 0037  C6 87 0009 R 01		    MOV BYTE PTR CHECK[BX],01H;初始节点已经被走过
+ 003C  C6 87 0027 R 00		    MOV BYTE PTR DIS[BX],00H;自己到自己距离为零
+ 0041  88 AF 002C R		    MOV BYTE PTR FATHER[BX],CH;自己是自己的父亲，结束标志
+				    
+ 0045				AGAIN:
+ 0045  8A DD			    MOV BL,CH
+ 0047  B7 00			    MOV BH,00H
+ 0049  80 BF 0027 R FF		    CMP BYTE PTR DIS[BX],0FFH
+ 004E  75 03 E9 0112		    JE FALSE;最短路径为无穷大
+				    
+ 0053  3A 2E 0008 R		    CMP CH,BYTE PTR ENDNUM
+ 0057  74 6B			    JE TOOUT;
+				    
+ 0059  8A 97 0027 R		    MOV DL,BYTE PTR DIS[BX];把从初始节点到当前节点的长度读入DL
+				    
+ 005D  BF 0000			    MOV DI,0;初始化变址
+				    
+ 0060  B0 05			    MOV AL,LEN1
+ 0062  F6 E5			    MUL CH
+ 0064  8B D8			    MOV BX,AX;得到所需的一组路径
+ 0066				SET_DIS:
+ 0066  81 FF 0005		    CMP DI,LEN1
+ 006A  74 27			    JE FIND_MIN;
+ 006C  80 BD 0009 R 01		    CMP BYTE PTR CHECK[DI],01H
+ 0071  74 1D			    JE NEXT
+				    
+ 0073  80 B9 000E R FF		    CMP BYTE PTR PATH[BX][DI],0FFH
+ 0078  74 16			    JE NEXT;不连通，直接跳过
+				    
+ 007A  8A 85 0027 R		    MOV AL,BYTE PTR DIS[DI];之前找到的最短路径长度
+ 007E  52			    PUSH DX
+ 007F  02 91 000E R		    ADD DL,BYTE PTR PATH[BX][DI];从当前节点走的最短路径
+ 0083  38 D0			    CMP AL,DL
+ 0085  76 08			    JBE NEXT_POP
+ 0087  88 95 0027 R		    MOV BYTE PTR DIS[DI],DL
+ 008B  88 AD 002C R		    MOV BYTE PTR FATHER[DI],CH
+				    
+ 008F				NEXT_POP:
+ 008F  5A			    POP DX
+ 0090				NEXT:
+ 0090  47			    INC DI
+ 0091  EB D3			    JMP SET_DIS
+				    
+				    ;1.找到最短点，给CH
+				    ;2.CH的CHECK设1
+ 0093				FIND_MIN:
+ 0093  BF 0000			    MOV DI,0
+ 0096  8A CD			    MOV CL,CH
+ 0098  BE 0000			    MOV SI,00H
+ 009B  B6 FF			    MOV DH,0FFH
+ 009D				AGAIN_MIN:
+ 009D  81 FF 0005		    CMP DI,LEN1
+ 00A1  74 16			    JE SET_CH;遍历完成
+				    
+ 00A3  80 BD 0009 R 01		    CMP BYTE PTR CHECK[DI],01H
+ 00A8  74 0C			    JE NEXT_MIN;已经被检查
+				    
+ 00AA  3A B5 0027 R		    CMP DH,BYTE PTR DIS[DI]
+ 00AE  72 06			    JB NEXT_MIN;不需要修改
+				    
+ 00B0  8A B5 0027 R		    MOV DH,BYTE PTR DIS[DI]
+ 00B4  8B F7			    MOV SI,DI
+
+ 00B6				NEXT_MIN:
+ 00B6  47			    INC DI
+ 00B7  EB E4			    JMP AGAIN_MIN    
+				    
+ 00B9				SET_CH:
+ 00B9  8B C6			    MOV AX,SI
+ 00BB  8A E8			    MOV CH,AL;1.找到最短点，给CH
+ 00BD  C6 84 0009 R 01		    MOV BYTE PTR CHECK[SI],01H;2.CH的CHECK设1
+				    
+ 00C2  EB 81			    JMP AGAIN
+
+ 00C4				TOOUT:
+ 00C4  8D 16 004A R		    LEA DX,MAKEIT
+ 00C8  B4 09			    MOV AH,9
+ 00CA  CD 21			    INT 21H
+				    
+ 00CC  B7 00			    MOV BH,0
+ 00CE  8A 0E 0006 R		    MOV CL,BYTE PTR STARTNUM
+				    
+ 00D2  8A 1E 0008 R		    MOV BL,BYTE PTR ENDNUM
+ 00D6  BF 0000			    MOV DI,0    
+ 00D9				OUT_AGAIN:
+ 00D9  38 CB			    CMP BL,CL
+ 00DB  74 0B			    JE PRINT_OUT
+ 00DD  88 9D 0031 R		    MOV BYTE PTR OUTPATH[DI],BL
+ 00E1  8A 9F 002C R		    MOV BL,BYTE PTR FATHER[BX]
+ 00E5  47			    INC DI
+ 00E6  EB F1			    JMP OUT_AGAIN
+				    
+ 00E8				PRINT_OUT:
+ 00E8  8A 16 0005 R		    MOV DL,BYTE PTR STARTNODE
+ 00EC  B4 02			    MOV AH,2
+ 00EE  CD 21			    INT 21H
+				    
+ 00F0  4F			    DEC DI
+ 00F1				PRINT_OUT2:
+ 00F1  83 FF 00			    CMP DI,0
+ 00F4  7C 17			    JL PRINT_COST
+ 00F6  B2 2D			    MOV DL,'-'
+ 00F8  CD 21			    INT 21H
+ 00FA  B2 3E			    MOV DL,'>'
+ 00FC  CD 21			    INT 21H
+				    
+ 00FE  B7 00			    MOV BH,0
+ 0100  8A 9D 0031 R		    MOV BL,BYTE PTR OUTPATH[DI]
+ 0104  8A 97 0000 R		    MOV DL,BYTE PTR NODENAME[BX]
+ 0108  CD 21			    INT 21H
+ 010A  4F			    DEC DI
+ 010B  EB E4			    JMP PRINT_OUT2
+				    
+				    ;JMP ENDD
+
+ 010D				PRINT_COST:
+				    
+ 010D  8D 16 0058 R		    LEA DX,COST
+ 0111  B4 09			    MOV AH,9
+ 0113  CD 21			    INT 21H
+				    
+ 0115  B7 00			    MOV BH,0
+ 0117  8A 1E 0008 R		    MOV BL,BYTE PTR ENDNUM
+ 011B  B5 00			    MOV CH,0
+ 011D  8A 8F 0027 R		    MOV CL,BYTE PTR DIS[BX]
+ 0121  8B C1			    MOV AX,CX
+ 0123  83 F8 64			    CMP AX,100
+ 0126  72 1A			    JB PRINT10
+				    
+ 0128  B2 64			    MOV DL,100
+ 012A  F6 F2			    DIV DL
+				    
+ 012C  B5 00			    MOV CH,0
+ 012E  8A CC			    MOV CL,AH
+				    
+ 0130  8A D0			    MOV DL,AL
+ 0132  80 C2 30			    ADD DL,30H
+ 0135  B4 02			    MOV AH,2
+ 0137  CD 21			    INT 21H
+				    
+ 0139  80 F9 0A			    CMP CL,10
+ 013C  73 04			    JAE PRINT10
+ 013E  B2 30			    MOV DL,30H
+ 0140  CD 21			    INT 21H
+				    
+ 0142				PRINT10:
+ 0142  8B C1			    MOV AX,CX
+ 0144  83 F8 0A			    CMP AX,10
+ 0147  72 11			    JB PRINT1
+				    
+ 0149  B2 0A			    MOV DL,10
+ 014B  F6 F2			    DIV DL
+				    
+ 014D  B5 00			    MOV CH,0
+ 014F  8A CC			    MOV CL,AH
+				    
+ 0151  8A D0			    MOV DL,AL
+ 0153  80 C2 30			    ADD DL,30H
+ 0156  B4 02			    MOV AH,2
+ 0158  CD 21			    INT 21H
+				    
+ 015A				PRINT1:      
+ 015A  8A D1			    MOV DL,CL
+ 015C  80 C2 30			    ADD DL,30H
+ 015F  B4 02			    MOV AH,2
+ 0161  CD 21			    INT 21H
+				    
+ 0163  EB 08			    JMP ENDD
+
+
+ 0165				FALSE:
+ 0165  8D 16 0036 R		    LEA DX,CANNOT
+ 0169  B4 09			    MOV AH,9
+ 016B  CD 21			    INT 21H
+ 016D				ENDD:  
+ 016D  B4 4C			    MOV AH,4CH
+ 016F  CD 21			    INT 21H
+ 0171				CODES ENDS
+				    END START
+Microsoft (R) Macro Assembler Version 6.11		    05/03/19 09:57:36
+tempfile.asm						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+CODES  . . . . . . . . . . . . .	16 Bit	 0171	  Para	  Private 
+DATAS  . . . . . . . . . . . . .	16 Bit	 0062	  Para	  Private 
+STACKS . . . . . . . . . . . . .	16 Bit	 0000	  Para	  Private 
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+AGAIN_MIN  . . . . . . . . . . .	L Near	 009D	  CODES	
+AGAIN  . . . . . . . . . . . . .	L Near	 0045	  CODES	
+CANNOT . . . . . . . . . . . . .	Byte	 0036	  DATAS	
+CHECK  . . . . . . . . . . . . .	Byte	 0009	  DATAS	
+COST . . . . . . . . . . . . . .	Byte	 0058	  DATAS	
+DIS  . . . . . . . . . . . . . .	Byte	 0027	  DATAS	
+ENDD . . . . . . . . . . . . . .	L Near	 016D	  CODES	
+ENDNODE  . . . . . . . . . . . .	Byte	 0007	  DATAS	
+ENDNUM . . . . . . . . . . . . .	Byte	 0008	  DATAS	
+FALSE  . . . . . . . . . . . . .	L Near	 0165	  CODES	
+FATHER . . . . . . . . . . . . .	Byte	 002C	  DATAS	
+FIND_E . . . . . . . . . . . . .	L Near	 0020	  CODES	
+FIND_MIN . . . . . . . . . . . .	L Near	 0093	  CODES	
+FIND_S . . . . . . . . . . . . .	L Near	 000C	  CODES	
+LEN1 . . . . . . . . . . . . . .	Number	 0005h	 
+MAKEIT . . . . . . . . . . . . .	Byte	 004A	  DATAS	
+NEXT_MIN . . . . . . . . . . . .	L Near	 00B6	  CODES	
+NEXT_POP . . . . . . . . . . . .	L Near	 008F	  CODES	
+NEXT . . . . . . . . . . . . . .	L Near	 0090	  CODES	
+NODENAME . . . . . . . . . . . .	Byte	 0000	  DATAS	
+OUTPATH  . . . . . . . . . . . .	Byte	 0031	  DATAS	
+OUT_AGAIN  . . . . . . . . . . .	L Near	 00D9	  CODES	
+PATH . . . . . . . . . . . . . .	Byte	 000E	  DATAS	
+PRINT10  . . . . . . . . . . . .	L Near	 0142	  CODES	
+PRINT1 . . . . . . . . . . . . .	L Near	 015A	  CODES	
+PRINT_COST . . . . . . . . . . .	L Near	 010D	  CODES	
+PRINT_OUT2 . . . . . . . . . . .	L Near	 00F1	  CODES	
+PRINT_OUT  . . . . . . . . . . .	L Near	 00E8	  CODES	
+SET_CH . . . . . . . . . . . . .	L Near	 00B9	  CODES	
+SET_DIS  . . . . . . . . . . . .	L Near	 0066	  CODES	
+SET_E  . . . . . . . . . . . . .	L Near	 0029	  CODES	
+SET_S  . . . . . . . . . . . . .	L Near	 0015	  CODES	
+STARTNODE  . . . . . . . . . . .	Byte	 0005	  DATAS	
+STARTNUM . . . . . . . . . . . .	Byte	 0006	  DATAS	
+START  . . . . . . . . . . . . .	L Near	 0000	  CODES	
+TOOUT  . . . . . . . . . . . . .	L Near	 00C4	  CODES	
+
+	   0 Warnings
+	   0 Errors

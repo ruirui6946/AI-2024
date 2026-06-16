@@ -1,0 +1,49 @@
+DATAS SEGMENT
+    ;此处输入数据段代码  
+DATAS ENDS
+
+STACKS SEGMENT
+    ;此处输入堆栈段代码
+STACKS ENDS
+
+CODES SEGMENT
+    ASSUME CS:CODES,DS:DATAS,SS:STACKS
+START:
+NJIE MACRO NA  
+    LOCAL PRINT0,ENDD
+    MOV BL,NA
+    CMP BL,0
+    JE PRINT0
+    CMP BL,1
+    JE PRINT0
+    MUL BL
+    DEC BL
+    
+    IF NA	
+    NJIE NA-1
+    ENDIF
+    JMP ENDD
+    
+PRINT0:
+    ;MOV CL,1
+ENDD:     
+ENDM
+
+    MOV AX,DATAS
+    MOV DS,AX
+    
+    MOV AL,1
+    MOV BL,0
+USE:
+    NJIE 3
+    MOV DL,AL
+    ADD DL,30H
+    MOV AH,2
+    INT 21H
+    
+    MOV AH,4CH
+    INT 21H
+    
+CODES ENDS
+    END START
+

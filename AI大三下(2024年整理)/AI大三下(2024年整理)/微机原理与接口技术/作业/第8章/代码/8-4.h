@@ -1,0 +1,28 @@
+;通道0初始化
+MOV DX,306H ;控制端口地址
+MOV AL,37H  ;方式3，先写低8位,BCD
+OUT DX,AL
+
+MOV DX,300H ;通道0端口地址
+MOV AL,34H
+OUT DX,AL
+MOV AL 13H
+OUT DX,AL
+
+;通道1初始化
+MOV DX,306H ;控制端口地址
+MOV AL,55H  ;方式2，只写低8位,BCD
+OUT DX,AL
+
+MOV DX,302H ;通道1端口地址
+MOV AL,05H
+OUT DX,AL
+
+;通道2初始化
+MOV DX,306H ;控制端口地址
+MOV AL,91H  ;方式0，只写低8位,BCD
+OUT DX,AL
+
+MOV DX,304H ;通道2端口地址
+MOV AL,29H
+OUT DX,AL

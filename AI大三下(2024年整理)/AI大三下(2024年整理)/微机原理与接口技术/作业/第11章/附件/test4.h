@@ -1,0 +1,5 @@
+MOV DX,220H     ;µÍ4Î»¼Ä´æÆ÷µØÖ·
+MOV AX,BUFF
+OUT DX,AX
+MOV DX,222H
+OUT DX,AL

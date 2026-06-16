@@ -1,0 +1,30 @@
+DATAS SEGMENT
+    MEM DB 1 DUP(?),0  
+DATAS ENDS
+
+STACKS SEGMENT
+    ;此处输入堆栈段代码
+STACKS ENDS
+
+CODES SEGMENT
+    ASSUME CS:CODES,DS:DATAS,SS:STACKS
+START:
+    MOV AX,DATAS
+    MOV DS,AX
+    
+    MOV AX,3
+    SUB AX,1
+    
+    IDIV 6
+    
+    IMUL 9
+    
+    ADD AX,8
+    
+    MOV SI,0
+    MOV [SI],AL
+    
+    MOV AH,4CH
+    INT 21H
+CODES ENDS
+    END START

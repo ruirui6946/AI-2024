@@ -1,0 +1,55 @@
+DATAS SEGMENT
+    DATA1 DB 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',5FH,60H,'abcdefghijklmnopqrstuvwxyz$'  
+DATAS ENDS
+
+STACKS SEGMENT
+    ;此处输入堆栈段代码
+STACKS ENDS
+
+CODES SEGMENT
+    ASSUME CS:CODES,DS:DATAS,SS:STACKS
+START:
+    MOV AX,DATAS
+    MOV DS,AX
+    
+    MOV SI,0
+LOOP1:
+    MOV AL,DATA1[SI]
+    CMP AL,'$'
+    JE LOOP1_END
+    
+    CMP AL,'A'
+    JB ADDD
+    
+    CMP AL,'z'
+    JA ADDD
+    
+    CMP AL,'Z'
+    JBE BB1
+    
+    CMP AL,'a'
+    JAE BB2
+    
+    JMP ADDD
+    
+BB1:
+    OR AL,20H
+    ;0010 0000
+    MOV BYTE PTR DATA1[SI],AL
+    JMP ADDD
+    
+BB2:
+    AND AL,5FH
+    ;0101 1111
+    MOV BYTE PTR DATA1[SI],AL
+    
+ADDD:
+    INC SI
+    JMP LOOP1
+LOOP1_END:
+    
+    
+    MOV AH,4CH
+    INT 21H
+CODES ENDS
+    END START

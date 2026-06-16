@@ -1,0 +1,86 @@
+Microsoft (R) Macro Assembler Version 6.11		    03/11/19 23:11:53
+tempfile.asm						     Page 1 - 1
+
+
+ 0000				DATAS SEGMENT
+ 0000 22 66 03 04 05 06		    DATA1 BYTE 22H,'f',03H,04H,05H,06H,07H,08H,09H,0AH
+       07 08 09 0A
+ 000A  0B 0C 0D 0E 0F 10	          BYTE 0BH,0CH,0DH,0EH,0FH,10H,11H,12H,13H,14H
+       11 12 13 14
+ 0014 41 42 43 44 45 46		    DATA2 BYTE 'A','B','C','D','E','F'
+ 001A  47 48 49 4A 4B 4C	          BYTE 'G','H','I','J','K','L'
+ 0020  4D 4E 4F 50 51 52	          BYTE 'M','N','O','P','Q','R'
+ 0026 41 42 43 44 45		    array BYTE 'A','B','C','D','E'
+ 002B  46 47 48 49 4A		          BYTE 'F','G','H','I','J'
+ 0030  4B 4C 4D 4E 4F		          BYTE 'K','L','M','N','O'
+				    ;此处输入数据段代码  
+ 0035				DATAS ENDS
+
+ 0000				STACKS SEGMENT
+				    ;此处输入堆栈段代码
+ 0000				STACKS ENDS
+
+ 0000				CODES SEGMENT
+				    ASSUME CS:CODES,DS:DATAS,SS:STACKS
+ 0000				START:
+ 0000  B8 ---- R		    MOV AX,DATAS
+ 0003  8E D8			    MOV DS,AX
+				    
+				    ;寄存器间接寻址
+				    ;MOV BX,OFFSET DATA1
+				    ;MOV AL,[BX]
+				    ;MOV DL,AL
+				    
+				    ;寄存器相对寻址
+				    ;MOV SI,1H
+				    ;MOV AL,DATA1[SI]
+				    ;MOV DL,AL
+				    
+				    ;MOV BX,OFFSET DATA2
+				    ;MOV SI,09H
+				    
+				    ;MOV BYTE PTR [BX+SI],'d'
+				    ;MOV AL,[BX+SI]
+				    ;MOV DL,AL
+				    
+				    ;相对基址变址寻址
+ 0005  BB 0005			    MOV BX,5H
+ 0008  BE 0002			    MOV SI,2H
+				    
+				    ;MOV BYTE PTR array[BX][SI],'a'
+				    ;MOV AL,array[BX][SI]
+				    ;MOV DL,AL
+				    
+ 000B  B4 02			    MOV AH,02H
+				    
+ 000D  CD 21			    INT 21H
+ 000F  B4 4C			    MOV AH,4CH
+ 0011  CD 21			    INT 21H
+ 0013				CODES ENDS
+				    END START
+Microsoft (R) Macro Assembler Version 6.11		    03/11/19 23:11:53
+tempfile.asm						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+CODES  . . . . . . . . . . . . .	16 Bit	 0013	  Para	  Private 
+DATAS  . . . . . . . . . . . . .	16 Bit	 0035	  Para	  Private 
+STACKS . . . . . . . . . . . . .	16 Bit	 0000	  Para	  Private 
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+DATA1  . . . . . . . . . . . . .	Byte	 0000	  DATAS	
+DATA2  . . . . . . . . . . . . .	Byte	 0014	  DATAS	
+START  . . . . . . . . . . . . .	L Near	 0000	  CODES	
+array  . . . . . . . . . . . . .	Byte	 0026	  DATAS	
+
+	   0 Warnings
+	   0 Errors

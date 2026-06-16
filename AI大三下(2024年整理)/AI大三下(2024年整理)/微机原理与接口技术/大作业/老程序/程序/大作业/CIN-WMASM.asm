@@ -1,0 +1,57 @@
+DATAS SEGMENT
+    DATA DB 5 DUP(00H)  
+DATAS ENDS
+
+STACKS SEGMENT
+    ;此处输入堆栈段代码
+STACKS ENDS
+
+CODES SEGMENT
+    ASSUME CS:CODES,DS:DATAS,SS:STACKS
+START:
+    MOV AX,DATAS
+    MOV DS,AX
+    
+    MOV CX,4
+    MOV SI,4
+AGAIN:
+    CALL CIN
+    MOV BYTE PTR DATA[SI],DL
+    DEC SI
+    LOOP AGAIN
+    
+    MOV AH,4CH
+    INT 21H
+    
+CIN PROC
+    PUSH AX
+    PUSH BX
+    
+    MOV DL,30H
+    MOV DH,10
+    MOV AL,0
+
+IN_AGAIN:
+    CMP DL,30H
+    JB IN_END
+    CMP DL,39H
+    JA IN_END
+    
+    MOV AH,1
+    INT 21H
+    SUB DL,30H
+    MOV AH,0
+    MUL DH
+    MOV BL,AL
+    ADD BL,DL
+    JMP IN_AGAIN
+    
+IN_END:
+    MOV DL,AL
+    POP BX
+    POP AX
+    RET
+    ENDP
+
+CODES ENDS
+    END START

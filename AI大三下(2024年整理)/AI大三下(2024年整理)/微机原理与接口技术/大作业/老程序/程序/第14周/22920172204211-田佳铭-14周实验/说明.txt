@@ -1,0 +1,4 @@
+程序1为wmasm-njie6.asm，在windows for masm2015环境下运行
+程序2为STRCMP.asm，在emu8086环境下运行
+
+附带有程序截图

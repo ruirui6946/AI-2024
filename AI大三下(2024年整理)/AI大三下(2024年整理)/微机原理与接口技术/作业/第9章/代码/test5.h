@@ -1,0 +1,68 @@
+DATA SEGMENT
+    TABLE DB 3FH,06H,5BH,4FH,66H,6DH,7DH,07H
+          DB 7FH,6FH,77H,7CH,39H,5EH,79H,71H
+DATA ENDS
+
+CODE SEGMENT
+    MOV AX,SEG INTR  ;形成中断矢量表
+    MOV DS,AX
+    MOV DX,OFFSET INTR
+    MOV AL,N
+    MOV AH,25H
+    INT 21H
+
+    ;8255A初始化
+    MOV AL,10010000B
+    MOV DX,303H
+    OUT DX,AL
+
+    ;8253初始化
+    MOV AL, 00110101B ;通道0,工作方式2,BCD计数
+    MOV DX,307H
+    OUT DX,AL
+    MOV AL,00H        ;置初值4000H
+    MOV DX,304H
+    OUT DX,AL
+    MOV AL,40H
+    OUT DX,AL
+    MOV AL,01110001B  ;通道1,工作方式0,BCD计数
+    MOV DX,307H
+    OUT DX,AL
+    MOV AL,99H        ;置初值999
+    MOV DX,305H
+    OUT DX,AL
+    MOV AL,09H
+    OUT DX,AL
+
+    STI
+    WORK:HLT          ;停等
+    JMP WORK
+CODE ENDS
+
+;中断服务程序
+INTR:
+PUSH AX
+STI
+MOV DX,300H
+IN AL,DX             ;检测开关,合上为0
+AND AL,0FH           ;只保留低4位PA3-PA0
+MOV BX,OFFSET TABLE  ;主程序数据段的TABLE
+XLAT TABLE
+MOV DX,301H
+OUT DX，AL           ;点亮LED,显示数字
+
+;重置通道1
+MOV AL,01110001B     ;通道1,工作方式0,BCD计数
+MOV DX,307H
+OUT DX,AL
+MOV AL,99H           ;置初值999
+MOV DX,305H
+OUT DX,AL
+MOV AL,09H
+OUT DX,AL
+
+CLI
+MOV AL,20H
+OUT 20H,AL           ;普通EOI
+POP AX
+IRET

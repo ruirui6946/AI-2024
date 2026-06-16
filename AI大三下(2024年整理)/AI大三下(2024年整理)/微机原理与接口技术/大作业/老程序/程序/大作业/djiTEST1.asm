@@ -1,0 +1,244 @@
+DATAS SEGMENT
+    NODENAME DB 'ABCDE'
+    LEN1 EQU $-NODENAME
+    
+    STARTNODE DB 'A'
+    STARTNUM DB 00H
+    ENDNODE DB 'E'
+    ENDNUM DB 00H
+    
+    ;CLOSED DB LEN1 DUP(00H)
+    CHECK DB LEN1 DUP(00H)
+    
+    PATH DB 00H,04H,07H,01H,08H
+         DB 04H,00H,0FFH,0FFH,03H
+         DB 07H,0FFH,00H,02H,03H
+         DB 01H,0FFH,02H,00H,0FFH
+         DB 08H,03H,03H,0FFH,00H
+         
+    DIS DB LEN1 DUP(0FFH)
+    FATHER DB LEN1 DUP(0FFH)
+    
+    OUTPATH DB LEN1 DUP(0FFH)
+    
+    CANNOT DB 'cannot find a way',0DH,0AH,'$'
+    MAKEIT DB 'find a way:',0DH,0AH,'$'
+    COST DB 0DH,0AH,'cost:',0DH,0AH,'$' 
+DATAS ENDS
+
+STACKS SEGMENT
+    ;此处输入堆栈段代码
+STACKS ENDS
+
+CODES SEGMENT
+    ASSUME CS:CODES,DS:DATAS,SS:STACKS
+START:
+    MOV AX,DATAS
+    MOV DS,AX
+    
+    ;MOV AL,LEN1
+    ;得到初始节点标号
+    MOV CL,BYTE PTR STARTNODE
+    MOV BX,0
+FIND_S:
+    CMP CL,BYTE PTR NODENAME[BX]
+    JE SET_S
+    INC BX
+    JMP FIND_S
+
+SET_S:
+    MOV BYTE PTR STARTNUM,BL
+    
+    ;得到目标节点标号
+    MOV CL,BYTE PTR ENDNODE
+    MOV BX,0
+FIND_E:
+    CMP CL,BYTE PTR NODENAME[BX]
+    JE SET_E
+    INC BX
+    JMP FIND_E
+
+SET_E:
+    MOV BYTE PTR ENDNUM,BL
+    
+    ;寻找路径
+    MOV CH,BYTE PTR STARTNUM
+    MOV BL,BYTE PTR STARTNUM
+    MOV BH,0
+    MOV BYTE PTR CHECK[BX],01H;初始节点已经被走过
+    MOV BYTE PTR DIS[BX],00H;自己到自己距离为零
+    MOV BYTE PTR FATHER[BX],CH;自己是自己的父亲，结束标志
+    
+AGAIN:
+    MOV BL,CH
+    MOV BH,00H
+    CMP BYTE PTR DIS[BX],0FFH
+    JE FALSE;最短路径为无穷大
+    
+    CMP CH,BYTE PTR ENDNUM
+    JE TOOUT;
+    
+    MOV DL,BYTE PTR DIS[BX];把从初始节点到当前节点的长度读入DL
+    
+    MOV DI,0;初始化变址
+    
+    MOV AL,LEN1
+    MUL CH
+    MOV BX,AX;得到所需的一组路径
+SET_DIS:
+    CMP DI,LEN1
+    JE FIND_MIN;
+    CMP BYTE PTR CHECK[DI],01H
+    JE NEXT
+    
+    CMP BYTE PTR PATH[BX][DI],0FFH
+    JE NEXT;不连通，直接跳过
+    
+    MOV AL,BYTE PTR DIS[DI];之前找到的最短路径长度
+    PUSH DX
+    ADD DL,BYTE PTR PATH[BX][DI];从当前节点走的最短路径
+    CMP AL,DL
+    JBE NEXT_POP
+    MOV BYTE PTR DIS[DI],DL
+    MOV BYTE PTR FATHER[DI],CH
+    
+NEXT_POP:
+    POP DX
+NEXT:
+    INC DI
+    JMP SET_DIS
+    
+    ;1.找到最短点，给CH
+    ;2.CH的CHECK设1
+FIND_MIN:
+    MOV DI,0
+    MOV CL,CH
+    MOV SI,00H
+    MOV DH,0FFH
+AGAIN_MIN:
+    CMP DI,LEN1
+    JE SET_CH;遍历完成
+    
+    CMP BYTE PTR CHECK[DI],01H
+    JE NEXT_MIN;已经被检查
+    
+    CMP DH,BYTE PTR DIS[DI]
+    JB NEXT_MIN;不需要修改
+    
+    MOV DH,BYTE PTR DIS[DI]
+    MOV SI,DI
+
+NEXT_MIN:
+    INC DI
+    JMP AGAIN_MIN    
+    
+SET_CH:
+    MOV AX,SI
+    MOV CH,AL;1.找到最短点，给CH
+    MOV BYTE PTR CHECK[SI],01H;2.CH的CHECK设1
+    
+    JMP AGAIN
+
+TOOUT:
+    LEA DX,MAKEIT
+    MOV AH,9
+    INT 21H
+    
+    MOV BH,0
+    MOV CL,BYTE PTR STARTNUM
+    
+    MOV BL,BYTE PTR ENDNUM
+    MOV DI,0    
+OUT_AGAIN:
+    CMP BL,CL
+    JE PRINT_OUT
+    MOV BYTE PTR OUTPATH[DI],BL
+    MOV BL,BYTE PTR FATHER[BX]
+    INC DI
+    JMP OUT_AGAIN
+    
+PRINT_OUT:
+    MOV DL,BYTE PTR STARTNODE
+    MOV AH,2
+    INT 21H
+    
+    DEC DI
+PRINT_OUT2:
+    CMP DI,0
+    JL PRINT_COST
+    MOV DL,'-'
+    INT 21H
+    MOV DL,'>'
+    INT 21H
+    
+    MOV BH,0
+    MOV BL,BYTE PTR OUTPATH[DI]
+    MOV DL,BYTE PTR NODENAME[BX]
+    INT 21H
+    DEC DI
+    JMP PRINT_OUT2
+    
+    ;JMP ENDD
+
+PRINT_COST:
+    
+    LEA DX,COST
+    MOV AH,9
+    INT 21H
+    
+    MOV BH,0
+    MOV BL,BYTE PTR ENDNUM
+    MOV CH,0
+    MOV CL,BYTE PTR DIS[BX]
+    MOV AX,CX
+    CMP AX,100
+    JB PRINT10
+    
+    DIV BYTE PTR 100
+    
+    MOV CH,0
+    MOV CL,AH
+    
+    MOV DL,AL
+    ADD DL,30H
+    MOV AH,2
+    INT 21H
+    
+    CMP CL,10
+    JAE PRINT10
+    MOV DL,30H
+    INT 21H
+    
+PRINT10:
+    MOV AX,CX
+    CMP AX,10
+    JB PRINT1
+    
+    DIV BYTE PTR 10
+    
+    MOV CH,0
+    MOV CL,AH
+    
+    MOV DL,AL
+    ADD DL,30H
+    MOV AH,2
+    INT 21H
+    
+PRINT1:      
+    MOV DL,CL
+    ADD DL,30H
+    MOV AH,2
+    INT 21H
+    
+    JMP ENDD
+
+
+FALSE:
+    LEA DX,CANNOT
+    MOV AH,9
+    INT 21H
+ENDD:  
+    MOV AH,4CH
+    INT 21H
+CODES ENDS
+    END START

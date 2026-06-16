@@ -1,0 +1,51 @@
+;主程序
+MOV AX,SEG INTR   ;形成中断矢量表
+MOV DS,AX
+MOV DX,OFFSET INTR
+MOV AL,N          ;中断号
+MOV AH,25H
+INT 21H
+
+;8255A初始化
+MOV AL,10010000B  ;A口输入、B口输出
+OUT 83H,AL
+
+;8253初始化
+MOV AL,00110101B  ;通道0,工作方式2,BCD计数
+OUT 87H,AL
+MOV AL,00H        ;置初值1000
+OUT 84H,AL
+MOV AL,10H
+OUT 84H,AL
+
+MOV AL,01110001B  ;通道1,工作方式0,BCD计数
+OUT 87H,AL
+MOV AL,99H        ;置初值999
+OUT 85H,AL
+MOV AL,09H
+OUT 85H,AL
+STI
+WORK:HLT          ;停等
+JMP WORK
+
+;中断服务程序
+INTR:
+PUSH AX
+STI
+IN AL,80H         ;检测开关,合上为0
+NOT AL            ;取反
+OUT 81H,AL        ;点亮相应LED
+
+;重新设置8253通道1
+MOV AL,01110001B  ;通道1,工作方式0,BCD计数
+OUT 87H,AL
+MOV AL,99H        ;置初值999
+OUT 85H,AL
+MOV AL,09H
+OUT 85H,AL
+
+CLI
+MOV AL,20H       ;普通EOI命令
+OUT 20H,AL
+POP AX
+IRET

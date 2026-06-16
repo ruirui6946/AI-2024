@@ -1,0 +1,271 @@
+;因为编译器的不同，代码打开可能会出现未对齐的情况，属于正常情况
+DSEG    SEGMENT
+;MESS    DB   8 DUP(?)
+;因为程序在emu8086中测试，不支持DUP(?)，测试时使用如下的写法
+MESS    DB  00H,00H,00H,00H,00H,00H,00H,00H
+P_8255A DW  300H,301H,302H,303H ;8255A通道地址 
+P_8253  DW  304H,305H,306H,307H ;8253通道地址
+P_8259A DW  308H,309H           ;8259A通道地址
+P_8251A DW  312H,313H           ;8251A通道地址
+INT_NUM DB  50H                 ;初始中断类型号
+DSEG    ENDS
+
+SSEG    SEGMENT PARA STACK 
+        DW  256 DUP(?)
+SSEG    ENDS
+
+CSEG    SEGMENT
+        ASSUME  CS:CSEG,DS:DSEG
+
+;宏，用来快速改变芯片的端口地址
+CH_PORT MACRO NP_8255A,NP_8253,NP_8259A,NP_8251A
+    ;更改8255A端口
+        MOV AX,NP_8255A
+        MOV CX，0004H
+        LEA DI,P_8255A
+C_8255A:MOV WORD PTR [DI],AX
+        INC AX
+        INC DI
+        INC DI  ;注意是WORD，所以+2
+        LOOP C_8255A
+        
+    ;更改8253端口
+        MOV AX,NP_8253
+        MOV CX，0004H
+        LEA DI,P_8253
+C_8253: MOV WORD PTR [DI],AX
+        INC AX
+        INC DI
+        INC DI
+        LOOP C_8253
+        
+    ;更改8259A端口
+        MOV AX,NP_8259A
+        MOV CX，0002H
+        LEA DI,P_8259A
+C_8259A:MOV WORD PTR [DI],AX
+        INC AX
+        INC DI
+        INC DI
+        LOOP C_8259A
+        
+    ;更改8251A端口
+        MOV AX,NP_8251A
+        MOV CX，0002H
+        LEA DI,P_8251A
+C_8251A:MOV WORD PTR [DI],AX
+        INC AX
+        INC DI
+        INC DI
+        LOOP C_8251A
+                
+CH_PORT ENDM
+        
+BEGIN:  MOV AX,DSEG
+        MOV DS,AX
+        
+        ;如果需要修改端口的地址值，可以取注这条代码
+        ;四个参数依次是8255A、8253、8259A、8251A的端口首地址
+        ;CH_PORT 304H,300H,312H,308H
+    
+    ;建立中断向量
+    ;这里不考虑键盘中断
+        ;后文中DS需要改变，所以先将中断号取出，放入BL
+        MOV AL,BYTE PTR INT_NUM
+        ADD AL,02H  ;IR2中断
+        MOV BL,AL
+        
+        ;建立IR2中断向量
+        PUSH DS
+        MOV AX,SEG WORK
+        MOV DS,AX
+        MOV AX,OFFSET WORK
+        MOV DX,AX
+        MOV AL,BL
+        MOV AH,25H
+        INT 21H
+        POP DS
+    
+    ;8255A初始化编程
+        ;A口编程为方式0
+        ;C口的高4位编程为输入，低4位为输出
+        MOV DX,WORD PTR P_8255A[6]  ;控制口地址
+        MOV AL,10011000B
+        OUT DX,AL
+        
+        
+    ;8253初始编程
+        ;8253初始化编程，通道0，方式3
+        ;先写低字节，后写高字节，BCD，时间常数8
+        ;使用CPU时钟：8MHz
+        ;用来给ADC0809提供时钟，时钟频率1MHz
+        MOV DX,WORD PTR P_8253[6]   ;控制口地址
+        MOV AL,00110111B
+        OUT DX,AL
+        MOV DX,WORD PTR P_8253[0]   ;通道0
+        MOV AX,0008H                ;时间常数8
+        OUT DX,AL                   ;低字节
+        MOV AL,AH
+        OUT DX,AL                   ;高字节
+        
+        ;8253初始化编程，通道1，方式3
+        ;先写低字节，后写高字节，BCD，时间常数52
+        ;使用CPU时钟：8MHz
+        ;用来给发送端8251A提供时钟，时钟频率0.1536MHz
+        MOV DX,WORD PTR P_8253[6]   ;控制口地址
+        MOV AL,01110111B
+        OUT DX,AL
+        MOV DX,WORD PTR P_8253[2]   ;通道1
+        MOV AX,0052H                ;时间常数52
+        OUT DX,AL                   ;低字节
+        MOV AL,AH
+        OUT DX,AL                   ;高字节
+        
+        ;8253初始化编程，通道2，方式2
+        ;先写低字节，后写高字节，BCD，时间常数1536
+        ;使用8253OUT1的时钟：0.1536MHz
+        ;用来给发送端8259A提供中断脉冲，频率100MHz
+        MOV DX,WORD PTR P_8253[6]   ;控制口地址
+        MOV AL,10110101B
+        OUT DX,AL
+        MOV DX,WORD PTR P_8253[4]   ;通道2
+        MOV AX,1536H                ;时间常数1536
+        OUT DX,AL                   ;低字节
+        MOV AL,AH
+        OUT DX,AL                   ;高字节
+    
+    ;8259A初始化编程
+        ;8259A初始化命令字
+        ;ICW1，单片8259A，边沿触发
+        MOV DX,WORD PTR P_8259A[0]
+        MOV AL,00010011B
+        OUT DX,AL
+        
+        ;ICW2,中断类型号INT_NUM~INT_NUM+7
+        MOV DX,WORD PTR P_8259A[2]
+        MOV AL,BYTE PTR INT_NUM
+        OUT DX,AL
+        
+        ;ICW4,全嵌套，普通EOI
+        MOV DX,WORD PTR P_8259A[2]
+        MOV AL,01H
+        OUT DX,AL
+        
+        ;OCW1,不屏蔽键盘中断（IR1）和使用到的IR2
+        MOV DX,WORD PTR P_8259A[2]
+        MOV AL,11111001B
+        OUT DX,AL
+        
+    ;8251A初始化编程
+        ;复位，先向控制口写3个0，再送复位字40H
+        MOV DX,WORD PTR P_8251A[2]
+        MOV AL,00H
+        OUT DX,AL
+        CALL REVTIME
+        OUT DX,AL
+        CALL REVTIME
+        OUT DX,AL
+        CALL REVTIME
+        MOV AL,40H
+        OUT DX,AL
+        CALL REVTIME
+        
+        ;写入控制字
+        ;串行异步通信、波特率9600Bd、波特率系数16
+        ;RxC#和TxC#的频率是0.1536MHz
+        ;1位停止位、偶校验、数据位8位、波特率系数16
+            ;关键是要和接收端一样的设置
+        MOV AL,01111110B
+        OUT DX,AL
+        CALL REVTIME
+        ;清楚错误标志、允许发送、屏蔽接收
+        MOV AL,00010001B
+        OUT DX,AL
+        CALL REVTIME
+        
+    ;停等
+WAIT_INT:
+        JMP WAIT_INT
+        
+;中断子程序，用以数据采集和发送
+WORK PROC FAR
+        PUSHA                       ;保护现场
+        STI                         ;关中断
+        
+    ;从ADC0809读入数据（通过8255A）
+        MOV CX,0008H                ;8次
+        CLD                         ;清方向标志
+        MOV BL,00H                  ;从0号通道开始
+        LEA DI,MESS
+NEXT_IN:MOV DX,WORD PTR P_8255A[4]  ;C口地址
+        MOV AL,BL
+        OUT DX,AL                   ;输入通道号
+        MOV DX,WORD PTR P_8255A[6]  ;控制口地址
+        MOV AL,00000111B            ;PC3置1
+        OUT DX,AL                   ;输出通道号
+        CALL NOP3                   ;NOP3次
+        MOV AL,00000110B            ;PC3复位
+        OUT DX,AL
+        MOV DX,WORD PTR P_8255A[4]  ;C口地址
+NO_CONV:IN AL,DX
+        TEST AL,80H
+        JNZ NO_CONV                 ;PC7=1，循环等待
+NO_EOC: IN AL,DX                    ;PC7=0，已经启动转换
+        TEST AL,80H
+        JZ NO_EOC                   ;PC7=0，转换未结束，等待
+        MOV DX,WORD PTR P_8255A[0]  ;A口地址
+        IN AL,DX                    ;读入数据
+        MOV BYTE PTR [DI],AL
+        INC DI
+        INC BL                      ;下个通道
+        LOOP NEXT_IN    
+        
+    ;发送数据，通过8251A
+        ;采用序号-数据模式，方便接收方验证
+        MOV CX,0008H                ;发送8组数据
+        CLD
+        MOV BL,00H                  ;从0号端口出发
+        LEA DI,MESS
+NEXT_T1:MOV DX,WORD PTR P_8251A[2]  ;控制口
+        IN AL,DX
+        TEST AL,01H
+        JZ NEXT_T1                  ;等待发送字准备好
+        MOV DX,WORD PTR P_8251A[0]  ;数据口
+        MOV AL,BL                   ;发送序号
+        OUT DX,AL
+NEXT_T2:MOV DX,WORD PTR P_8251A[2]  ;控制口
+        IN AL,DX
+        TEST AL,01H
+        JZ NEXT_T1                  ;等待发送字准备好
+        MOV DX,WORD PTR P_8251A[0]  ;数据口
+        MOV AL,[DI]                 ;发送数据
+        OUT DX,AL
+        INC DI
+        INC BL                      ;通道数+1
+        LOOP NEXT_T1 
+        
+        CLI                         ;开中断
+        MOV DX,WORD PTR P_8259A[0]
+        MOV AL,20H
+        OUT DX,AL
+        POPA                        ;恢复现场
+        IRET
+WORK ENDP
+
+;延时函数
+REVTIME PROC
+        MOV CX,02H
+D:      LOOP D
+        RET
+REVTIME ENDP
+
+;NOP3次
+NOP3 PROC
+        NOP
+        NOP
+        NOP
+        RET
+NOP3 ENDP
+        
+CSEG    ENDS
+        END  BEGIN

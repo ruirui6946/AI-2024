@@ -1,0 +1,370 @@
+;因为编译器的不同，代码打开可能会出现未对齐的情况，属于正常情况
+DSEG    SEGMENT
+MESS    DB   8 DUP(?)
+O_MESS  DB   8 DUP(?)
+TEM_CH  DB   8 DUP(?)
+;因为程序在emu8086中测试，不支持DUP(?)，测试时使用如下的写法
+;MESS    DB  00H,00H,00H,00H,00H,00H,00H,00H
+;O_MESS  DB  00H,00H,00H,00H,00H,00H,00H,00H
+;TEM_CH  DB  00H,00H,00H,00H,00H,00H,00H,00H ;00H不变，01H升高，02H降低
+FIRST   DB  00H                 ;第一组不需要输出气温比较
+P_8253  DW  304H,305H,306H,307H ;8253通道地址
+P_8259A DW  308H,309H           ;8259A通道地址
+P_8251A DW  312H,313H           ;8251A通道地址
+INT_NUM DB  50H                 ;初始中断类型号
+TEM1    DB  'The temperature of channel $'
+TEM2    DB  ' is $'
+TEM3    DB  ' Celsius. $'
+N_LINE  DB  0DH,0AH,'$'
+UP      DB  'The temperature is rising.',0DH,0AH,'$'
+DOWN    DB  'The temperature is decreasing.',0DH,0AH,'$'
+SAME    DB  'No change in temperature.',0DH,0AH,'$'
+OVER    DB  'WARNING! The temperature of this channel exceeds 60 degrees Celsius',0DH,0AH,'$'
+DSEG    ENDS
+
+SSEG    SEGMENT PARA STACK 
+        DW  256 DUP(?)
+SSEG    ENDS
+
+CSEG    SEGMENT
+        ASSUME  CS:CSEG,DS:DSEG
+        
+;修改宏-原始形式
+;CHIP：芯片（对应的地址变量）。
+;ADDR：起始地址。
+;TYPE：地址类型。01H为连续地址，02H为基地址
+;NUM：需要更改的地址数，为字类型
+;CH_ADDR：循环名，为了防止重复展开出错
+CH_ORI MACRO CHIP,ADDR,TYPE,NUM,CH_ADDR
+        MOV AX,ADDR
+        MOV CX,NUM
+        LEA DI,CHIP
+CH_ADDR:MOV WORD PTR [DI],AX
+        ADD AX,TYPE
+        INC DI
+        INC DI
+        LOOP CH_ADDR 
+CH_ORI ENDM
+
+;宏，用来快速改变芯片的端口地址，所有情况
+CH_PORT MACRO NP_8253,T_8253,NP_8259A,T_8259A,NP_8251A,T_8251A
+        ;不知道为什么，直接传递T_8255A会出错，这里使用BX来辅助
+        MOV BX,T_8253
+        CH_ORI P_8253,NP_8253,BX,0004H,CH2
+        MOV BX,T_8259A
+        CH_ORI P_8259A,NP_8259A,BX,0002H,CH3
+        MOV BX,T_8251A
+        CH_ORI P_8251A,NP_8251A,BX,0002H,CH4               
+CH_PORT ENDM
+
+;宏，用来快速改变芯片的端口地址，连续地址的情况
+CH_PORT_CON MACRO NP_8253,NP_8259A,NP_8251A
+        CH_ORI P_8253,NP_8253,01H,0004H,CH_CON2
+        CH_ORI P_8259A,NP_8259A,01H,0002H,CH_CON3
+        CH_ORI P_8251A,NP_8251A,01H,0002H,CH_CON4               
+CH_PORT_COM ENDM
+
+;宏，用来快速改变芯片的端口地址，奇地址、偶地址的情况
+CH_PORT_OE MACRO NP_8253,NP_8259A,NP_8251A
+        CH_ORI P_8253,NP_8253,02H,0004H,CH_OE2
+        CH_ORI P_8259A,NP_8259A,02H,0002H,CH_OE3
+        CH_ORI P_8251A,NP_8251A,02H,0002H,CH_OE4               
+CH_PORT_OE ENDM 
+
+BEGIN:  MOV AX,DSEG
+        MOV DS,AX
+        
+        ;如果需要修改端口的地址值，可以取注这些代码
+        ;四个参数依次是8253、8259A、8251A的端口首地址
+        CH_PORT_CON 300H,312H,308H
+        CH_PORT_OE 300H,316H,310H
+        ;六个参数依次是8253、8259A、8251A的端口首地址和类型
+        ;端口地址和类型紧邻，01H代表连续地址，02H代表基地址或者偶地址
+        CH_PORT 300H,01H,312H,02H,308H,02H
+    
+    ;建立中断向量
+    ;这里不考虑键盘中断
+        ;后文中DS需要改变，所以先将中断号取出，放入BL
+        MOV AL,BYTE PTR INT_NUM
+        ADD AL,02H  ;IR2中断
+        MOV BL,AL
+        
+        ;建立IR2中断向量
+        PUSH DS
+        MOV AX,SEG WORK
+        MOV DS,AX
+        MOV AX,OFFSET WORK
+        MOV DX,AX
+        MOV AL,BL
+        MOV AH,25H
+        INT 21H
+        POP DS
+        
+    ;8253初始编程  
+        ;8253初始化编程，通道1，方式3
+        ;先写低字节，后写高字节，BCD，时间常数52
+        ;使用CPU时钟：8MHz
+        ;用来给发送端8251A提供时钟，时钟频率0.1536MHz
+        MOV DX,WORD PTR P_8253[6]   ;控制口地址
+        MOV AL,01110111B
+        OUT DX,AL
+        MOV DX,WORD PTR P_8253[2]   ;通道1
+        MOV AX,0052H                ;时间常数52
+        OUT DX,AL                   ;低字节
+        MOV AL,AH
+        OUT DX,AL                   ;高字节
+        
+    ;8259A初始化编程
+        ;8259A初始化命令字
+        ;ICW1，单片8259A，边沿触发
+        MOV DX,WORD PTR P_8259A[0]
+        MOV AL,00010011B
+        OUT DX,AL
+        
+        ;ICW2,中断类型号INT_NUM~INT_NUM+7
+        MOV DX,WORD PTR P_8259A[2]
+        MOV AL,BYTE PTR INT_NUM
+        OUT DX,AL
+        
+        ;ICW4,全嵌套，普通EOI
+        MOV DX,WORD PTR P_8259A[2]
+        MOV AL,01H
+        OUT DX,AL
+        
+        ;OCW1,不屏蔽键盘中断（IR1）和使用到的IR2
+        MOV DX,WORD PTR P_8259A[2]
+        MOV AL,11111001B
+        OUT DX,AL
+            
+    ;8251A初始化编程
+        ;复位，先向控制口写3个0，再送复位字40H
+        MOV DX,WORD PTR P_8251A[2]
+        MOV AL,00H
+        OUT DX,AL
+        CALL REVTIME
+        OUT DX,AL
+        CALL REVTIME
+        OUT DX,AL
+        CALL REVTIME
+        MOV AL,40H
+        OUT DX,AL
+        CALL REVTIME
+        
+        ;写入控制字
+        ;串行异步通信、波特率9600Bd、波特率系数16
+        ;RxC#和TxC#的频率是0.1536MHz
+        ;1位停止位、偶校验、数据位8位、波特率系数16
+            ;关键是要和发送端一样的设置
+        MOV AL,01111110B
+        OUT DX,AL
+        CALL REVTIME
+        ;清楚错误标志、允许接收、屏蔽发送
+        MOV AL,00010100B
+        OUT DX,AL
+        CALL REVTIME
+        
+    ;停等
+WAIT_INT:
+        JMP WAIT_INT
+        
+;中断子程序，用以数据采集和发送
+WORK PROC FAR
+        PUSHA                       ;保护现场
+        STI                         ;关中断
+        
+    ;接收数据
+        ;先比照序号，如有错误，直接结束
+        MOV CX,0008H                ;接收8组数据
+        CLD
+        MOV BL,00H                  ;从0号端口出发
+        LEA DI,MESS
+        ;LEA SI,TEM_CH
+NEXT_R1:MOV DX,WORD PTR P_8251A[2]  ;控制口
+        IN AL,DX
+        TEST AL,02H
+        JZ NEXT_R1                  ;因为是将RxRDY作为中断控制信号，第一个数据也可以不用检验
+        ;这里暂且不考虑数据发生错误的情况
+        ;TEST AL,38H
+        ;JZ W_END
+        ;直接结束
+        MOV DX,WORD PTR P_8251A[0]  ;数据口
+        IN AL,DX
+        CMP AL,BL
+        JNE W_END                   ;序号错误，结束本次接收
+NEXT_R2:MOV DX,WORD PTR P_8251A[2]  ;控制口
+        IN AL,DX
+        TEST AL,02H
+        JZ NEXT_R2
+        ;这里暂且不考虑数据发生错误的情况
+        ;TEST AL,38H
+        ;JZ W_END
+        ;直接结束
+        MOV DX,WORD PTR P_8251A[0]  ;数据口
+        IN AL,DX
+        MOV [DI],AL
+        INC DI
+        INC BL                      ;通道数+1
+        LOOP NEXT_R1
+    
+    ;打印信息
+        ;先与之前的温度数据做比较
+        MOV CX,0008H                ;接收8组数据
+        CLD
+        MOV BX,0000H                ;从0号端口出发,同时作为一个偏移
+        LEA DI,MESS                 ;新数据
+        LEA SI,O_MESS               ;旧数据 
+T_CMP:  MOV AH,[DI]
+        MOV AL,[SI]
+        CMP AH,AL
+        JE T_SAME                   ;判定温度是否升高
+        CMP AH,AL
+        JA T_UP
+        MOV TEM_CH[BX],02H
+        JMP T_END
+T_UP:   MOV TEM_CH[BX],01H
+        JMP T_END
+T_SAME: MOV TEM_CH[BX],00H
+T_END:  MOV [SI],AH                 ;将新温度写入旧温度，方便下一次比较
+        INC BX
+        INC DI
+        INC SI
+        LOOP T_CMP
+        
+        ;打印信息
+        MOV CX,0008H                ;接收8组数据
+        CLD
+        MOV BX,0000H                ;从0号端口出发,同时作为一个偏移
+        LEA DI,MESS                 ;温度数据
+        LEA SI,TEM_CH               ;温度变化信息
+P_LOOP: MOV DX,OFFSET TEM1
+        CALL PRINT_MESS
+        MOV AX,BX
+        CALL PRINT10
+        MOV DX,OFFSET TEM2
+        CALL PRINT_MESS
+        MOV AL,[DI]
+        MOV AH,0
+        CALL TEM_GET
+        CALL PRINT10
+        MOV DX,OFFSET TEM3
+        CALL PRINT_MESS
+        
+        MOV AL,FIRST
+        CMP AL,08H
+        JB PRINTL                   ;目前是第一次输出
+        MOV AL,[SI]
+        CMP AL,01H                  ;温度升高
+        JE P_UP
+        CMP AL,02H
+        JE P_DOWN
+        MOV DX,OFFSET SAME
+        JMP P_END
+P_UP:   MOV DX,OFFSET UP
+        JMP P_END
+P_DOWN: MOV DX,OFFSET DOWN
+        JMP P_END       
+PRINTL: INC AL
+        MOV FIRST,AL
+        MOV DX,OFFSET N_LINE
+        JMP P_END
+P_END:  CALL PRINT_MESS
+        MOV AL,[DI]
+        CALL TEM_GET
+        CMP AL,3CH                  ;即60度
+        JB R_LOOP
+        MOV DX,OFFSET OVER          ;高于60度，打印警告信息
+        CALL PRINT_MESS
+R_LOOP: INC DI
+        INC SI
+        INC BX
+        LOOP P_LOOP
+        
+W_END:  CLI                         ;开中断
+        MOV DX,WORD PTR P_8259A[0]
+        MOV AL,20H
+        OUT DX,AL
+        POPA                        ;恢复现场
+        IRET
+WORK ENDP
+
+;延时函数
+REVTIME PROC
+        MOV CX,02H
+D:      LOOP D
+        RET
+REVTIME ENDP
+
+;将数字量转换为温度数值
+;本应该是除以2.56，不使用浮点数计算的情况下，先乘25，后除以64
+;为了安全起见，结果向上取整
+;要处理的数据放在AL中，处理完成后，结果存放在AL中，同时AH清零（不需要余数）
+TEM_GET PROC
+        PUSH BX
+        MOV BL,19H                  ;即25
+        MUL BL
+        MOV BH,40H                  ;即64
+        DIV BH
+        MOV AH,0
+        INC AL
+        POP BX
+        RET
+TEM_GET ENDP
+
+
+;10进制输出函数
+;将AL的数据打印出来
+PRINT10 PROC
+        PUSH DX
+        PUSH AX
+        ;我们只需要打印AL的数据
+        ;AH置0，防止错误，程序结束后，AH原值随AX一起POP出来
+        MOV AH,0
+    
+        MOV DX,10
+        PUSH DX
+    
+PUSH_AGAIN:
+
+        MOV DL,10
+        DIV DL
+        MOV DL,AH
+        MOV DH,0
+        PUSH DX         ;除以10，压栈
+        CMP AL,0        ;除尽，开始输出
+        JE POP_AGAIN
+        MOV AH,0
+        JMP PUSH_AGAIN
+    
+POP_AGAIN:
+    
+        POP DX
+        CMP DX,10
+        JE PRINT_END
+        ADD DX,30H      ;转成对应的ASCII码
+        MOV AH,2
+        INT 21H
+        JMP POP_AGAIN
+        
+    
+PRINT_END:    
+        ;数字输出结束后，可以添加一些间隔符
+        ;MOV DL,' '
+        ;MOV AH,2
+        ;INT 21H
+    
+        POP AX
+        POP DX
+        RET
+PRINT10 ENDP
+
+;打印信息函数，将DX指向的数据串打印出来
+PRINT_MESS PROC
+        PUSH AX
+        MOV AH,9
+        INT 21H
+        POP AX
+        RET
+PRINT_MESS ENDP
+        
+CSEG    ENDS
+        END  BEGIN
