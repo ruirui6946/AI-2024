@@ -1,0 +1,31 @@
+windows下安裝Python和nltk：
+1. 下載 Python 3.5.1 32位版本，並安裝
+2. 下載 numpy：http://www.lfd.uci.edu/~gohlke/pythonlibs/#numpy     
+   選擇 numpy-1.10.4+vanilla-cp35-none-win32.whl
+   用 pip install numpy-1.10.4+vanilla-cp35-none-win32.whl 安裝
+3. 下載 nltk （https://pypi.python.org/pypi/nltk 選擇nltk-3.1.win32.exe）並安裝
+4. 在Python命令行中運行
+   import nltk
+   nltk.download()
+   在彈出的窗口中，把下載路徑改為c:\nltk_data. 需要等很久，可能有些包無法安裝.需手動下載，如
+   nltk.download('pe08')
+   panlex_lite的網址為http://dev.panlex.org/db/panlex_lite.zip
+5. 以上步驟完成後，應該可成功運行http://www.nltk.org/首頁上的一些程序片段。
+
+安装 matplotlib:
+1. 下载以下程序包
+    six-1.10.0-py2.py3-none-any.whl
+    cycler-0.10.0-py2.py3-none-any.whl
+    pyparsing-2.1.0-py2.py3-none-any.whl
+    python_dateutil-2.4.2-py2.py3-none-any.whl
+    pytz-2015.7-py2.py3-none-any.whl
+    matplotlib-1.5.1-cp35-none-win32.whl
+2. 用pip install安装
+
+安装Beautiful Soup:
+1. 下载 beautifulsoup4-4.4.1.tar.gz
+2. pip install beautifulsoup4-4.4.1.tar.gz
+
+安装Universal Feed Parser:
+1. 从https://pypi.python.org/pypi/feedparser下载 feedparser-5.2.1.tar.gz
+2. pip install feedparser-5.2.1.tar.gz
