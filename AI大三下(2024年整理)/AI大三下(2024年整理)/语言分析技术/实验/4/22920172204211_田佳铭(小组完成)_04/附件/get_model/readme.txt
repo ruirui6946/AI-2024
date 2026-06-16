@@ -1,0 +1,4 @@
+get_i_chaizi文件夹：获取拆字倒映射模型的文件夹
+get_W2V_model：获得Word2Vec分类模型的文件夹
+get_corpus文件夹：获取英语二元语言模型的文件夹
+get_pinyin_hanzi文件夹：获取拼音-汉字常用词映射的文件夹
