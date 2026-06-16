@@ -22,6 +22,19 @@ function Invoke-Git {
     }
 }
 
+function Test-ReadableFile {
+    param([string]$Path)
+
+    try {
+        $stream = [System.IO.File]::Open($Path, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read, [System.IO.FileShare]::ReadWrite)
+        $stream.Close()
+        return $true
+    }
+    catch {
+        return $false
+    }
+}
+
 function Get-UntrackedFiles {
     $paths = @(& git -c core.quotepath=false ls-files --others --exclude-standard)
     if ($LASTEXITCODE -ne 0) {
@@ -43,6 +56,16 @@ function Get-UntrackedFiles {
         }
 
         if (-not $item.PSIsContainer) {
+            if ($item.Name -like "~$*") {
+                Write-Warning "Skipping Office lock file: $relativePath"
+                continue
+            }
+
+            if (-not (Test-ReadableFile -Path $item.FullName)) {
+                Write-Warning "Skipping unreadable file: $relativePath"
+                continue
+            }
+
             [pscustomobject]@{
                 RelativePath = $relativePath.Replace("\", "/")
                 Length       = [long]$item.Length
